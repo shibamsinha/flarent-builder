@@ -1,14 +1,14 @@
 # Flarent Builder V1
 
-A visual website builder — drag-and-drop editing, multi-page sites, a responsive
-system, and a static export that produces a real website.
+A visual website builder with drag-and-drop editing, multi-page sites, a
+responsive system, and a static export that produces a real website.
 
 **No AI anywhere.** Every behaviour in V1 is deterministic application logic.
 There is no dependency on any model or AI API, and none is needed.
 
 ```bash
 npm install
-npm run dev        # editor at http://localhost:5173
+npm run dev        # landing page at http://localhost:5173
 npm test           # 149 tests
 npm run build      # production bundle
 npm run export:demo  # build every template to demo-export/ as static sites
@@ -26,7 +26,7 @@ User interaction → commands → Project JSON → NodeRenderer → canvas / pre
 
 The editor canvas, the preview, and the static export all call the same
 `NodeRenderer` with a different `RenderEnv`. A component has no idea which one
-it is rendering into, so what you design is what gets published — there is no
+it is rendering into, so what you design is what gets published. There is no
 second rendering path to drift out of sync.
 
 The only deliberate difference is *where styles are written*: the canvas and
@@ -55,11 +55,12 @@ src/
     repository/     ProjectRepository interface + IndexedDB implementation
     persistence/    IndexedDB wrapper with an in-memory fallback
     migrations/     schema versioning and document repair
-  services/         assets / forms / publishing — all behind interfaces
+  services/         assets / forms / publishing, all behind interfaces
   store/            editor state, history, autosave
   builder/          the editor UI (canvas, inspector, panels, dialogs, preview)
   templates/        five starting sites, built from real components
-  dashboard/        project list
+  landing/          the marketing page at /
+  dashboard/        project list at /dashboard
 ```
 
 ### Commands are the only way to change a project
@@ -101,7 +102,7 @@ registerComponent({
 
 The components panel, the inspector, nesting validation, the layers tree, the
 exporter and the templates all pick it up from the registry. The inspector is
-schema-driven — there is no per-component inspector UI anywhere in the codebase.
+schema-driven, so there is no per-component inspector UI anywhere in the codebase.
 
 A component can also declare `syncChildren`, which is how `Columns` adds and
 removes column children when its count changes without that logic leaking into
@@ -114,7 +115,7 @@ Desktop is the base; tablet inherits desktop; mobile inherits tablet. Only
 
 ```ts
 styles: { desktop: { fontSize: 48 }, mobile: { fontSize: 32 } }
-// tablet resolves to 48 — nothing is stored for it
+// tablet resolves to 48, nothing is stored for it
 ```
 
 Because the export emits widest-first `max-width` queries, the normal CSS
@@ -131,7 +132,7 @@ the canvas, the preview and the export at once, with no node rewriting.
 Selection outlines, hover highlights, badges and drop indicators are drawn as an
 **overlay above the page**, positioned from measured rects. Node DOM is
 byte-for-byte identical in the editor and on the published site, and hovering
-never re-renders a node — which is what keeps large pages smooth.
+never re-renders a node, which is what keeps large pages smooth.
 
 ### Drag and drop
 
@@ -157,9 +158,28 @@ without the editor changing.
 
 Every saved document carries `schemaVersion`. `migrateProject()` runs ordered
 migrations, then a repair pass that guarantees the invariants the editor relies
-on — exactly one home page, unique slugs, unique node ids, no dangling
+on: exactly one home page, unique slugs, unique node ids, no dangling
 navigation links. Malformed nodes are dropped rather than crashing the canvas;
 a slightly lossy open beats an unopenable project.
+
+### Routes
+
+| Path                | Screen                                        |
+|---------------------|-----------------------------------------------|
+| `/`                 | Landing page, with a button into the builder  |
+| `/dashboard`        | Project list: create, rename, duplicate, open |
+| `/edit/:projectId`  | The editor                                    |
+| `/preview/:id`      | Preview, with device and page switching       |
+
+### Interface
+
+The application chrome is Neo-Brutalist: hard black borders, offset shadows
+with no blur, flat fills, square corners and heavy uppercase labels. There are
+no gradients in the UI. Depth comes from displacement rather than softness, so
+every interactive surface moves when you touch it.
+
+That styling applies to the builder itself, never to the websites you make with
+it. Your site renders with its own theme tokens and is unaffected.
 
 ---
 
@@ -167,7 +187,7 @@ a slightly lossy open beats an unopenable project.
 
 ```
 index.html            styles.css      (theme + layout + media queries)
-menu/index.html       flarent.js      (form handling — the only script)
+menu/index.html       flarent.js      (form handling, the only script)
 about/index.html      sitemap.xml
 contact/index.html    robots.txt
 assets/…              (uploaded images)

@@ -64,7 +64,7 @@ const footerNode = () =>
     email: 'hello@cadence.app',
     phone: '+44 191 406 7720',
     address: '60 Grainger Street<br>Newcastle NE1 5JG',
-    hoursNote: 'Support Mon–Fri 08:00–19:00<br>Status page updated live',
+    hoursNote: 'Support Mon-Fri 08:00-19:00<br>Status page updated live',
     background: '#16101f',
   });
 
@@ -80,7 +80,7 @@ function home() {
       },
     }, [
       n('container', {}, { desktop: { alignItems: 'center', textAlign: 'center', gap: 26, maxWidth: 880 } }, [
-        n('text', { text: 'New — capacity forecasting is live' }, {
+        n('text', { text: 'New: capacity forecasting is live' }, {
           desktop: {
             color: PRIMARY, fontSize: 13, fontWeight: 600, backgroundColor: '#ffffff',
             paddingTop: 7, paddingBottom: 7, paddingLeft: 16, paddingRight: 16,
@@ -93,7 +93,7 @@ function home() {
           tablet: { fontSize: 48 },
           mobile: { fontSize: 34 },
         }),
-        n('text', { text: 'Cadence turns your team’s real availability into a plan you can commit to — so projects stop slipping and nobody ends up with three deadlines on the same Friday.' }, {
+        n('text', { text: 'Cadence turns your team’s real availability into a plan you can commit to, so projects stop slipping and nobody ends up with three deadlines on the same Friday.' }, {
           desktop: { fontSize: 20, textAlign: 'center', maxWidth: 660 },
         }),
         n('flex', {}, { desktop: { gap: 12, justifyContent: 'center', width: 'auto' }, mobile: { flexDirection: 'column' } }, [
@@ -125,7 +125,7 @@ function home() {
           n('heading', { text: 'Built for the way service work actually runs', level: 'h2' }, {
             desktop: { textAlign: 'center', fontSize: 40 }, mobile: { fontSize: 28 },
           }),
-          n('text', { text: 'Not another ticket queue. Cadence models people, hours and commitments — the three things that decide whether a date is real.' }, {
+          n('text', { text: 'Not another ticket queue. Cadence models people, hours and commitments: the three things that decide whether a date is real.' }, {
             desktop: { textAlign: 'center' },
           }),
         ]),
@@ -143,7 +143,7 @@ function home() {
       title: 'Teams that stopped guessing',
       columns: 3,
       items: [
-        { id: itemId(), quote: 'We cut slipped deadlines by two thirds in a quarter. The forecast view is the thing — we can see the crunch four weeks out.', name: 'Laura Finn', role: 'Ops Director, Halden', rating: 5, avatar: '' },
+        { id: itemId(), quote: 'We cut slipped deadlines by two thirds in a quarter. The forecast view is the thing, we can see the crunch four weeks out.', name: 'Laura Finn', role: 'Ops Director, Halden', rating: 5, avatar: '' },
         { id: itemId(), quote: 'Set-up took one afternoon including the calendar sync. Our old tool took six weeks and never worked properly.', name: 'Idris Khan', role: 'Head of Delivery, Pinewell', rating: 5, avatar: '' },
         { id: itemId(), quote: 'The first tool the team actually opens on a Monday. That alone tells you something.', name: 'Grace Oyelaran', role: 'Studio Manager, Vantage', rating: 5, avatar: '' },
       ],
@@ -215,7 +215,7 @@ function features() {
         }),
       ]),
     ]),
-    row('Live capacity', 'One view of who is available, when, and for how long — across every team and location.', ['Holidays, part-time patterns and recurring commitments included', 'Filter by skill, team, location or client', 'Updates the moment anything changes'], tileArt({ from: PRIMARY, to: SECONDARY, width: 1100, height: 760 }), false),
+    row('Live capacity', 'One view of who is available, when, and for how long, across every team and location.', ['Holidays, part-time patterns and recurring commitments included', 'Filter by skill, team, location or client', 'Updates the moment anything changes'], tileArt({ from: PRIMARY, to: SECONDARY, width: 1100, height: 760 }), false),
     row('Twelve-week forecast', 'Look forward far enough to do something about it. Cadence highlights the first week that breaks.', ['Scenario planning for work you have not won yet', 'Flags over-allocation before it reaches a person', 'Export to CSV for finance'], blobArt({ from: '#16c79a', to: PRIMARY, width: 1100, height: 760 }), true),
     row('Two-way calendar sync', 'Google Workspace and Microsoft 365, synced both ways, so nobody maintains two calendars.', ['Set up per team in minutes', 'Respects private event visibility', 'Conflicts surfaced, never silently overwritten'], tileArt({ from: SECONDARY, to: '#16c79a', width: 1100, height: 760 }), false),
     row('Shared client plans', 'A read-only link clients can check themselves, instead of another status call.', ['Shows milestones, not internal detail', 'Revoke access at any time', 'Branded with your own logo and colours'], blobArt({ from: PRIMARY, to: '#16101f', width: 1100, height: 760 }), true),

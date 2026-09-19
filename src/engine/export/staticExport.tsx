@@ -141,7 +141,7 @@ function renderDocument(
   assetPaths: Map<string, string>,
 ): string {
   const { settings, theme } = project;
-  const title = page.seo.title || `${page.name} — ${settings.siteName}`;
+  const title = page.seo.title || `${page.name} | ${settings.siteName}`;
   const description = page.seo.description || settings.description;
   const canonical =
     page.seo.canonical ||

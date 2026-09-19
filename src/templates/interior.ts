@@ -64,7 +64,7 @@ const footerNode = () =>
     email: 'studio@marlowe.design',
     phone: '+44 117 325 0044',
     address: '3 Bellevue Mews<br>Bristol BS8 2QF',
-    hoursNote: 'Studio visits by appointment<br>Mon–Thu 09:00–17:00',
+    hoursNote: 'Studio visits by appointment<br>Mon-Thu 09:00-17:00',
     background: INK,
   });
 
@@ -79,7 +79,7 @@ function home() {
             tablet: { fontSize: 46 },
             mobile: { fontSize: 32 },
           }),
-          n('text', { text: 'Marlowe Studio designs whole-house interiors for period properties and new builds across the south west — from structural planning through to the last lamp.' }, {
+          n('text', { text: 'Marlowe Studio designs whole-house interiors for period properties and new builds across the south west, from structural planning through to the last lamp.' }, {
             desktop: { fontSize: 19, maxWidth: 620 },
           }),
           n('flex', {}, { desktop: { gap: 14, width: 'auto' }, mobile: { flexDirection: 'column' } }, [

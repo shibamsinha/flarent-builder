@@ -16,7 +16,7 @@ interface Options {
 
 /**
  * Build the environment the renderer needs. The editor and the preview differ
- * only in this object — never in the components themselves.
+ * only in this object, never in the components themselves.
  */
 export function useRenderEnv({
   project,

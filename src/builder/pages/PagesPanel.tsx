@@ -237,7 +237,7 @@ function PageSettings({ page, onClose }: { page: Page; onClose: () => void }) {
           onChange={(event) => setSeo({ ...seo, title: event.target.value })}
         />
       </Field>
-      <Field label="Meta description" help="Aim for 140–160 characters.">
+      <Field label="Meta description" help="Aim for 140-160 characters.">
         <textarea
           className="f-textarea"
           rows={3}

@@ -65,7 +65,7 @@ const footerNode = () =>
     email: 'train@ironworksgym.co.uk',
     phone: '+44 113 496 0180',
     address: 'Unit 7, Dockside Works<br>Leeds LS10 1AA',
-    hoursNote: 'Mon–Fri 05:30–21:30<br>Sat–Sun 07:00–16:00',
+    hoursNote: 'Mon-Fri 05:30-21:30<br>Sat-Sun 07:00-16:00',
     background: '#05070a',
   });
 
@@ -208,7 +208,7 @@ function classes() {
         n('heading', { text: 'Timetable', level: 'h1' }, {
           desktop: { fontSize: 58, textTransform: 'uppercase', color: '#fff' }, mobile: { fontSize: 36 },
         }),
-        n('text', { text: 'Every class is coached and capped at twelve. Book through the app or just turn up — we will always find you a rack.' }, {
+        n('text', { text: 'Every class is coached and capped at twelve. Book through the app or just turn up, we will always find you a rack.' }, {
           desktop: { fontSize: 18 },
         }),
       ]),
@@ -217,10 +217,10 @@ function classes() {
       n('container', {}, { desktop: { gap: 20 } }, [
         n('grid', { columns: 2 }, { desktop: { gap: 20 } }, [
           day('Monday / Wednesday / Friday', [
-            ['05:30', 'Strength — lower', 'Priya'],
+            ['05:30', 'Strength: lower', 'Priya'],
             ['07:00', 'Conditioning 35', 'Dan'],
             ['12:15', 'Lunch lift', 'Priya'],
-            ['18:00', 'Strength — upper', 'Marcus'],
+            ['18:00', 'Strength: upper', 'Marcus'],
             ['19:15', 'Conditioning 35', 'Dan'],
           ]),
           day('Tuesday / Thursday', [

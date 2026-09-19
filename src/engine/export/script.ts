@@ -42,7 +42,7 @@ export const EXPORT_SCRIPT = String.raw`(function () {
       submittedAt: new Date().toISOString(),
       data: data
     };
-    var success = form.getAttribute('data-fl-success') || 'Thank you — your message has been sent.';
+    var success = form.getAttribute('data-fl-success') || 'Thank you. Your message has been sent.';
     var endpoint = form.getAttribute('data-fl-endpoint');
     var button = form.querySelector('button[type="submit"]');
 

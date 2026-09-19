@@ -17,7 +17,7 @@ export type LoadState = 'idle' | 'loading' | 'ready' | 'error';
 
 interface ApplyOptions {
   /**
-   * Consecutive changes sharing a merge key collapse into one undo step —
+   * Consecutive changes sharing a merge key collapse into one undo step, so
    * dragging a slider produces a single entry, not ninety.
    */
   mergeKey?: string;

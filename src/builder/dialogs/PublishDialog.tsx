@@ -40,7 +40,7 @@ export function PublishDialog({ onClose }: { onClose: () => void }) {
           <button className="f-btn f-btn-secondary" onClick={onClose}>
             Close
           </button>
-          <button className="f-btn f-btn-gradient" onClick={() => void publish()} disabled={busy}>
+          <button className="f-btn f-btn-primary" onClick={() => void publish()} disabled={busy}>
             {busy ? <Loader size={15} className="f-spin" /> : <FileDown size={15} />}
             {busy ? 'Building…' : 'Build & download'}
           </button>
@@ -112,7 +112,7 @@ export function PublishDialog({ onClose }: { onClose: () => void }) {
       >
         <Globe size={16} style={{ color: 'var(--f-brand)', flex: 'none', marginTop: 2 }} />
         <p style={{ fontSize: 12.5, lineHeight: 1.6, color: 'var(--f-muted)' }}>
-          The exported site is plain HTML and CSS — no editor code ships with it. Flarent Hosting with
+          The exported site is plain HTML and CSS. No editor code ships with it. Flarent Hosting with
           custom domains and one-click deploys will publish to the same build.
         </p>
       </div>

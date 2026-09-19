@@ -8,7 +8,7 @@ let registered = false;
 
 /**
  * The single place components enter the system. Adding a component to Flarent
- * Builder means writing one definition file and adding it here — nothing else
+ * Builder means writing one definition file and adding it here. Nothing else
  * in the application needs to change.
  */
 export function registerBuiltInComponents(): void {

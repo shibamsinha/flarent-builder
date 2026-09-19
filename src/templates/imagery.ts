@@ -18,7 +18,7 @@ export interface ArtOptions {
   height?: number;
 }
 
-/** Soft layered blobs — used for hero and feature imagery. */
+/** Soft layered blobs, used for hero and feature imagery. */
 export function blobArt({ from, to, tint = '#ffffff', width = 1200, height = 900 }: ArtOptions): string {
   return encode(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
@@ -36,7 +36,7 @@ export function blobArt({ from, to, tint = '#ffffff', width = 1200, height = 900
     </svg>`);
 }
 
-/** Geometric grid — used for service cards and galleries. */
+/** Geometric grid, used for service cards and galleries. */
 export function tileArt({ from, to, tint = '#ffffff', width = 900, height = 700 }: ArtOptions): string {
   return encode(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
@@ -55,7 +55,7 @@ export function tileArt({ from, to, tint = '#ffffff', width = 900, height = 700 
     </svg>`);
 }
 
-/** Portrait-friendly diagonal bands — used for people/avatars and tall cards. */
+/** Portrait-friendly diagonal bands, used for people/avatars and tall cards. */
 export function bandArt({ from, to, tint = '#ffffff', width = 700, height = 900 }: ArtOptions): string {
   return encode(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">

@@ -38,7 +38,7 @@ export function assembleProject(spec: SiteSpec, projectName?: string): Project {
     name: page.name,
     slug: page.isHome ?? index === 0 ? '' : (page.slug ?? slug(page.name)),
     isHome: page.isHome ?? index === 0,
-    seo: page.seo ?? { title: `${page.name} — ${spec.siteName}` },
+    seo: page.seo ?? { title: `${page.name} | ${spec.siteName}` },
     nodes: page.nodes,
   }));
 
@@ -152,7 +152,7 @@ export function footer(options: {
         ]),
         column('Contact', `${options.email}<br>${options.phone}`),
         column('Visit', options.address),
-        column('Hours', options.hoursNote ?? 'Mon–Fri 9:00–18:00<br>Sat 10:00–16:00'),
+        column('Hours', options.hoursNote ?? 'Mon-Fri 9:00-18:00<br>Sat 10:00-16:00'),
       ]),
       n('divider', { color: 'rgba(255,255,255,0.14)' }),
       n('text', { text: `© ${new Date().getFullYear()} ${options.brand}. All rights reserved.` }, {

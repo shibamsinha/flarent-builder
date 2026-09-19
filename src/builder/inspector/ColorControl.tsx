@@ -10,7 +10,7 @@ const PRESETS = [
 ];
 
 /**
- * Colour input that prefers theme tokens over raw values — picking "Primary"
+ * Colour input that prefers theme tokens over raw values. Picking "Primary"
  * stores `var(--fl-color-primary)`, so a later theme change flows through.
  */
 export function ColorControl({

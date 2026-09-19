@@ -76,7 +76,7 @@ export function Inspector() {
             <div className="f-empty">
               <strong>Nothing to configure</strong>
               <span>
-                {definition.label} is a container — select the elements inside it, or switch to the
+                {definition.label} is a container. Select the elements inside it, or switch to the
                 Design tab to style it.
               </span>
             </div>

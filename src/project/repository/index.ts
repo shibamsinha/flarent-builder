@@ -7,7 +7,7 @@ export function getProjectRepository(): ProjectRepository {
   return repository;
 }
 
-/** Swap the implementation — used by tests today, by Flarent Cloud later. */
+/** Swap the implementation: used by tests today, by Flarent Cloud later. */
 export function setProjectRepository(next: ProjectRepository): void {
   repository = next;
 }

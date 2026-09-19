@@ -169,7 +169,7 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-/** Total node count — used for performance diagnostics and the layers panel. */
+/** Total node count, used for performance diagnostics and the layers panel. */
 export function countNodes(nodes: BuilderNode[]): number {
   let count = 0;
   walkTree(nodes, () => {

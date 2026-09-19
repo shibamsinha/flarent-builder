@@ -10,7 +10,7 @@ import { themeToCssText } from '@/engine/theme';
  * Turn every node's responsive styles into a real stylesheet.
  *
  * Breakpoints are emitted widest-first as `max-width` queries, which reproduces
- * the editor's inheritance model exactly through the normal CSS cascade — no
+ * the editor's inheritance model exactly through the normal CSS cascade, so no
  * value is ever duplicated across breakpoints.
  */
 export function buildStylesheet(project: Project): string {

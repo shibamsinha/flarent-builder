@@ -5,7 +5,7 @@ import { getComponent } from '@/engine/registry/registry';
 import { nodePath } from '@/engine/commands/tree';
 import { useCurrentPage, useEditorStore } from '@/store/editorStore';
 
-/** Tree view of the page. Mirrors the canvas exactly — same ids, same order. */
+/** Tree view of the page. Mirrors the canvas exactly: same ids, same order. */
 export function LayersPanel() {
   const page = useCurrentPage();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});

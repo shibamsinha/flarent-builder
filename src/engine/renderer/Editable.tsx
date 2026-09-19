@@ -26,7 +26,7 @@ interface EditableProps {
 /**
  * Renders a text value, and becomes a contenteditable region while the editor
  * marks this node as being edited. The element is intentionally uncontrolled
- * during editing — React must not re-render the DOM the caret lives in.
+ * during editing, because React must not re-render the DOM the caret lives in.
  */
 export function Editable({
   nodeId,

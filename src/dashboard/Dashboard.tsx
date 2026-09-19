@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Copy, Ellipsis, FolderOpen, Layers, Loader, Pencil, Plus, Trash2, TriangleAlert,
 } from 'lucide-react';
@@ -60,10 +60,10 @@ export function Dashboard() {
   return (
     <div className="f-dash">
       <header className="f-dash-bar">
-        <span className="f-logo">
+        <Link className="f-logo" to="/" title="Back to the home page">
           <span className="f-logo-mark">F</span>
           Flarent Builder
-        </span>
+        </Link>
         <span className="f-chip" style={{ marginLeft: 4 }}>
           V1
         </span>
@@ -73,9 +73,9 @@ export function Dashboard() {
         <div className="f-dash-hero">
           <div>
             <h1>My websites</h1>
-            <p>Build, edit and publish professional websites — no code required.</p>
+            <p>Build, edit and publish professional websites. No code required.</p>
           </div>
-          <button className="f-btn f-btn-gradient" onClick={() => setPicking(true)}>
+          <button className="f-btn f-btn-primary" onClick={() => setPicking(true)}>
             <Plus size={16} />
             Create website
           </button>
@@ -168,7 +168,7 @@ function ProjectCard({
     <article className="f-card">
       <button
         className="f-card-thumb"
-        style={{ background: `linear-gradient(135deg, ${from}, ${to})`, border: 'none', width: '100%', cursor: 'pointer' }}
+        style={{ background: from, border: 'none', width: '100%', cursor: 'pointer' }}
         onClick={onOpen}
         aria-label={`Open ${project.name}`}
       >
@@ -179,10 +179,10 @@ function ProjectCard({
             <i />
           </span>
           <span className="f-card-thumb-lines">
-            <i style={{ width: '62%', height: 8, background: '#2a2532', opacity: 0.8 }} />
+            <i style={{ width: '62%', height: 8, background: '#0a0a0a', opacity: 1 }} />
             <i style={{ width: '88%' }} />
             <i style={{ width: '70%' }} />
-            <i style={{ width: '46%', marginTop: 4, height: 12, borderRadius: 6, background: `${from}25` }} />
+            <i style={{ width: '46%', marginTop: 4, height: 13, background: to, opacity: 1, border: '1.5px solid #0a0a0a' }} />
           </span>
         </span>
       </button>
@@ -255,7 +255,7 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
         Start from one of five ready-made templates, or from a blank page. You can change everything
         later.
       </p>
-      <button className="f-btn f-btn-gradient" onClick={onCreate} style={{ marginTop: 6 }}>
+      <button className="f-btn f-btn-primary" onClick={onCreate} style={{ marginTop: 6 }}>
         <Plus size={16} />
         Create your first website
       </button>

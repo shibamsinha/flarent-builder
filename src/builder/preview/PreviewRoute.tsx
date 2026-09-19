@@ -13,7 +13,7 @@ import { useRenderEnv } from '@/builder/editor/useRenderEnv';
 
 /**
  * Preview renders the site through the same renderer the canvas uses, with the
- * editor affordances simply absent — no leftover outlines, no drop hints.
+ * editor affordances simply absent: no leftover outlines, no drop hints.
  */
 export function PreviewRoute() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -81,7 +81,7 @@ export function PreviewRoute() {
           <TriangleAlert size={26} style={{ color: 'var(--f-danger)' }} />
           <h2>Preview unavailable</h2>
           <p>{error}</p>
-          <Link className="f-btn f-btn-secondary" to="/">
+          <Link className="f-btn f-btn-secondary" to="/dashboard">
             <ArrowLeft size={15} /> Back to my websites
           </Link>
         </div>

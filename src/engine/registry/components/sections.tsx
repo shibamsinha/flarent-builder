@@ -352,7 +352,7 @@ const footerDef: ComponentDefinition<Record<string, never>> = {
         ]),
         n('column', {}, {}, [
           n('heading', { text: 'Visit', level: 'h4' }, { desktop: { color: '#ffffff', fontSize: 16 } }),
-          n('text', { text: '128 High Street<br>Open Mon–Sat' }, {
+          n('text', { text: '128 High Street<br>Open Mon-Sat' }, {
             desktop: { color: 'rgba(255,255,255,0.66)', fontSize: 15 },
           }),
         ]),

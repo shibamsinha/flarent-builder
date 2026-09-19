@@ -592,7 +592,7 @@ export function ResponsiveGroup({ node, styles }: { node: BuilderNode; styles: N
     >
       {device !== 'desktop' ? (
         <div className="f-inherit-note">
-          Editing {device}. Values you change here apply to {device} and narrower only — everything else
+          Editing {device}. Values you change here apply to {device} and narrower only. Everything else
           is inherited.
         </div>
       ) : (

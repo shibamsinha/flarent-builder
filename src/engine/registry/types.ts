@@ -13,7 +13,7 @@ export const CATEGORY_LABELS: Record<ComponentCategory, string> = {
 };
 
 /* ------------------------------------------------------------------ *
- * Inspector field schema — drives the Content tab with no per-component
+ * Inspector field schema. Drives the Content tab with no per-component
  * UI code. Adding a component never means editing the inspector.
  * ------------------------------------------------------------------ */
 
@@ -190,7 +190,7 @@ export interface ComponentDefinition<P = Record<string, unknown>> {
   /** Node cannot be deleted/moved by the user (reserved for future use). */
   locked?: boolean;
   /**
-   * Lets a component keep its subtree in sync with its own props — e.g. a
+   * Lets a component keep its subtree in sync with its own props, e.g. a
    * Columns block adding/removing column children when the count changes.
    * Declared here so the behaviour ships with the component instead of
    * leaking into the store.

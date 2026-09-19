@@ -1,5 +1,5 @@
 /**
- * Flarent Builder — Project schema.
+ * Flarent Builder: the Project schema.
  *
  * Everything a website is made of lives in this structure. It is plain,
  * serialisable JSON: the editor, the preview and the static export all read
@@ -28,7 +28,7 @@ export interface NodeAnimation {
 /**
  * A single element in the component tree.
  *
- * `type` is resolved against the component registry at render time — unknown
+ * `type` is resolved against the component registry at render time. Unknown
  * types render as a recoverable error placeholder rather than crashing.
  */
 export interface BuilderNode {

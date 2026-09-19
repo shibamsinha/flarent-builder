@@ -65,7 +65,7 @@ const footerNode = () =>
     email: 'reservations@oliveandash.com',
     phone: '+1 (555) 204 8811',
     address: '42 Fisher Street<br>Old Town',
-    hoursNote: 'Tue–Thu 17:00–22:00<br>Fri–Sat 12:00–23:00<br>Sun 12:00–17:00',
+    hoursNote: 'Tue-Thu 17:00-22:00<br>Fri-Sat 12:00-23:00<br>Sun 12:00-17:00',
     background: INK,
   });
 
@@ -167,12 +167,12 @@ function home() {
             title: 'Opening hours',
             rows: [
               { id: itemId(), day: 'Monday', hours: '', closed: true },
-              { id: itemId(), day: 'Tuesday', hours: '17:00 – 22:00', closed: false },
-              { id: itemId(), day: 'Wednesday', hours: '17:00 – 22:00', closed: false },
-              { id: itemId(), day: 'Thursday', hours: '17:00 – 22:00', closed: false },
-              { id: itemId(), day: 'Friday', hours: '12:00 – 23:00', closed: false },
-              { id: itemId(), day: 'Saturday', hours: '12:00 – 23:00', closed: false },
-              { id: itemId(), day: 'Sunday', hours: '12:00 – 17:00', closed: false },
+              { id: itemId(), day: 'Tuesday', hours: '17:00 - 22:00', closed: false },
+              { id: itemId(), day: 'Wednesday', hours: '17:00 - 22:00', closed: false },
+              { id: itemId(), day: 'Thursday', hours: '17:00 - 22:00', closed: false },
+              { id: itemId(), day: 'Friday', hours: '12:00 - 23:00', closed: false },
+              { id: itemId(), day: 'Saturday', hours: '12:00 - 23:00', closed: false },
+              { id: itemId(), day: 'Sunday', hours: '12:00 - 17:00', closed: false },
             ],
           }, { desktop: { backgroundColor: '#f5e9dd' } })]),
           n('column', {}, {}, [n('map', { address: '42 Fisher Street, Old Town', height: 340 })]),
@@ -203,7 +203,7 @@ function menu() {
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 40, backgroundColor: '#f5e9dd' } }, [
       n('container', {}, { desktop: { gap: 14, alignItems: 'center', textAlign: 'center', maxWidth: 700 } }, [
         n('heading', { text: 'The menu', level: 'h1' }, { desktop: { fontSize: 56, textAlign: 'center' }, mobile: { fontSize: 36 } }),
-        n('text', { text: 'Changed every few weeks as the season turns. Ask us about wine — the list is short and all of it is open by the glass.' }, {
+        n('text', { text: 'Changed every few weeks as the season turns. Ask us about wine, the list is short and all of it is open by the glass.' }, {
           desktop: { fontSize: 18, textAlign: 'center' },
         }),
       ]),

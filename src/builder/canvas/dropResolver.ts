@@ -44,7 +44,7 @@ const MAX_EDGE_ZONE = 16;
  * Work out where a dragged component would land.
  *
  * Structure comes from the project tree and geometry from the DOM, so the
- * result is always a position that actually exists in the document — a drop
+ * result is always a position that actually exists in the document, so a drop
  * can never lose a component.
  */
 export function resolveDrop(args: ResolveArgs): DropPlan {

@@ -4,6 +4,7 @@ import { Loader } from 'lucide-react';
 import { RuntimeStyles } from '@/app/providers/RuntimeStyles';
 import { Toasts } from '@/components/ui';
 import { Dashboard } from '@/dashboard/Dashboard';
+import { Landing } from '@/landing/Landing';
 
 // The editor and preview are the heavy modules; the dashboard loads instantly.
 const EditorRoute = lazy(() =>
@@ -19,7 +20,8 @@ export function AppRouter() {
       <RuntimeStyles />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/edit/:projectId" element={<EditorRoute />} />
           <Route path="/preview/:projectId" element={<PreviewRoute />} />
           <Route path="*" element={<Navigate to="/" replace />} />

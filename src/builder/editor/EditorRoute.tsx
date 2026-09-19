@@ -39,7 +39,7 @@ export function EditorRoute() {
           <TriangleAlert size={26} style={{ color: 'var(--f-danger)' }} />
           <h2>This website could not be opened</h2>
           <p>{loadError}</p>
-          <Link className="f-btn f-btn-secondary" to="/">
+          <Link className="f-btn f-btn-secondary" to="/dashboard">
             <ArrowLeft size={15} /> Back to my websites
           </Link>
         </div>

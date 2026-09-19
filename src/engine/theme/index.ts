@@ -2,7 +2,7 @@ import type { ThemeConfig } from '@/types/project';
 
 /**
  * Theme tokens are emitted as CSS custom properties so a token change
- * propagates everywhere at once — canvas, preview and exported site — without
+ * propagates everywhere at once (canvas, preview and exported site) without
  * touching a single node.
  *
  * Style values reference them as `var(--fl-color-primary)`.
@@ -12,7 +12,7 @@ export const THEME_VAR_PREFIX = '--fl-';
 export interface ThemeToken {
   /** e.g. `--fl-color-primary` */
   cssVar: string;
-  /** e.g. `var(--fl-color-primary)` — what gets stored in a StyleMap. */
+  /** e.g. `var(--fl-color-primary)`, which is what gets stored in a StyleMap. */
   reference: string;
   label: string;
   group: 'color' | 'font' | 'radius' | 'layout';

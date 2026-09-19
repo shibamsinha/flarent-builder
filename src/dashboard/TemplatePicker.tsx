@@ -30,14 +30,14 @@ export function TemplatePicker({
     <Modal
       wide
       title="Create a website"
-      description="Pick a starting point. Everything in a template is editable — they are built from the same components you drag onto the canvas."
+      description="Pick a starting point. Everything in a template is editable, because they are built from the same components you drag onto the canvas."
       onClose={onClose}
       footer={
         <>
           <button className="f-btn f-btn-secondary" onClick={onClose} disabled={busy}>
             Cancel
           </button>
-          <button className="f-btn f-btn-gradient" onClick={submit} disabled={busy}>
+          <button className="f-btn f-btn-primary" onClick={submit} disabled={busy}>
             {busy ? <Loader size={15} className="f-spin" /> : <Sparkles size={15} />}
             {busy ? 'Building…' : 'Create website'}
           </button>
@@ -83,14 +83,24 @@ export function TemplatePicker({
 /** A miniature of a real page layout, drawn from the template's own colours. */
 export function TemplateThumb({ from, to }: { from: string; to: string }) {
   return (
-    <div className="f-tpl-thumb" style={{ background: `linear-gradient(130deg, ${from}, ${to})` }}>
+    <div className="f-tpl-thumb" style={{ background: from }}>
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '38%',
+          marginLeft: 'auto',
+          background: to,
+          borderLeft: '2px solid #0a0a0a',
+        }}
+      />
       <div
         style={{
           position: 'absolute',
           inset: '12px 14px -20px',
           background: '#fff',
-          borderRadius: '6px 6px 0 0',
-          boxShadow: '0 14px 28px -14px rgba(0,0,0,.5)',
+          border: '2px solid #0a0a0a',
+          borderBottom: 'none',
           padding: 8,
           display: 'flex',
           flexDirection: 'column',
@@ -98,19 +108,22 @@ export function TemplateThumb({ from, to }: { from: string; to: string }) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ width: 22, height: 5, borderRadius: 3, background: from, opacity: 0.85 }} />
+          <span style={{ width: 22, height: 5, background: from }} />
           <span style={{ marginLeft: 'auto', display: 'flex', gap: 3 }}>
             {[0, 1, 2].map((i) => (
-              <i key={i} style={{ display: 'block', width: 10, height: 3, borderRadius: 2, background: '#e6e2ed' }} />
+              <i key={i} style={{ display: 'block', width: 10, height: 3, background: '#0a0a0a', opacity: 0.3 }} />
             ))}
           </span>
         </div>
-        <span style={{ height: 9, width: '68%', borderRadius: 3, background: '#2a2532', opacity: 0.85 }} />
-        <span style={{ height: 4, width: '86%', borderRadius: 3, background: '#ddd8e4' }} />
-        <span style={{ height: 4, width: '74%', borderRadius: 3, background: '#ddd8e4' }} />
+        <span style={{ height: 9, width: '68%', background: '#0a0a0a' }} />
+        <span style={{ height: 4, width: '86%', background: '#0a0a0a', opacity: 0.22 }} />
+        <span style={{ height: 4, width: '74%', background: '#0a0a0a', opacity: 0.22 }} />
         <div style={{ display: 'flex', gap: 5, marginTop: 3 }}>
           {[0, 1, 2].map((i) => (
-            <span key={i} style={{ flex: 1, height: 22, borderRadius: 4, background: i === 1 ? `${from}22` : '#f1eef6' }} />
+            <span
+              key={i}
+              style={{ flex: 1, height: 22, border: '1.5px solid #0a0a0a', background: i === 1 ? from : 'transparent' }}
+            />
           ))}
         </div>
       </div>

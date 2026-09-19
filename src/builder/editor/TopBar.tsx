@@ -37,7 +37,7 @@ export function TopBar() {
         title="Back to my websites"
         onClick={async () => {
           await saveNow();
-          navigate('/');
+          navigate('/dashboard');
         }}
       >
         <ArrowLeft size={16} />
@@ -106,7 +106,7 @@ export function TopBar() {
           <Eye size={15} />
           Preview
         </button>
-        <button className="f-btn f-btn-gradient" onClick={() => openDialog('publish')}>
+        <button className="f-btn f-btn-primary" onClick={() => openDialog('publish')}>
           <Rocket size={15} />
           Publish
         </button>

@@ -155,7 +155,7 @@ export function Canvas({
 
         {dropLabel ? <div className="f-canvas-status">{dropLabel}</div> : null}
         {scale < 1 ? (
-          <div className="f-canvas-zoom" title="The page is scaled to fit — the real width is unchanged">
+          <div className="f-canvas-zoom" title="The page is scaled to fit. The real width is unchanged">
             {Math.round(scale * 100)}%
           </div>
         ) : null}

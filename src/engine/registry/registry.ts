@@ -63,7 +63,7 @@ export function resetRegistry(): void {
 
 /**
  * Build a fresh node from its definition, including the default subtree.
- * Every node — including nested defaults — gets a unique id.
+ * Every node, including nested defaults, gets a unique id.
  */
 export function createNode(
   type: string,
