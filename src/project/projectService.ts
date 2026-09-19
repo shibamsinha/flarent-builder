@@ -2,6 +2,7 @@ import type { Project, ProjectSummary } from '@/types/project';
 import { getProjectRepository } from '@/project/repository';
 import { getAssetService } from '@/services/assets';
 import { getTemplate } from '@/templates';
+import type { ProfileInput } from '@/onboarding/profile';
 import { projectId as makeProjectId } from '@/utils/id';
 
 /**
@@ -13,13 +14,17 @@ export async function listProjects(): Promise<ProjectSummary[]> {
   return getProjectRepository().list();
 }
 
+/**
+ * Build a project for a specific business rather than handing over a template
+ * full of someone else's placeholder details.
+ */
 export async function createProjectFromTemplate(
   templateId: string,
-  name: string,
+  profile: ProfileInput,
 ): Promise<Project> {
   const template = getTemplate(templateId);
   if (!template) throw new Error(`Unknown template "${templateId}"`);
-  const project = template.build(name);
+  const project = template.build(profile);
   await getProjectRepository().create(project);
   return project;
 }

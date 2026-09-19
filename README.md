@@ -60,6 +60,7 @@ src/
   builder/          the editor UI (canvas, inspector, panels, dialogs, preview)
   templates/        five starting sites, built from real components
   landing/          the marketing page at /
+  onboarding/       the brand profile and the four-step setup flow
   dashboard/        project list at /dashboard
 ```
 
@@ -161,6 +162,31 @@ migrations, then a repair pass that guarantees the invariants the editor relies
 on: exactly one home page, unique slugs, unique node ids, no dangling
 navigation links. Malformed nodes are dropped rather than crashing the canvas;
 a slightly lossy open beats an unopenable project.
+
+### Onboarding
+
+A template is a layout, not a finished company. Choosing one opens a four-step
+flow that asks who the site is actually for, and the project is built around
+those answers:
+
+1. **Style** picks the layout.
+2. **Business** takes the name, a one-line tagline, a short description and a
+   brand colour.
+3. **Offer** takes the three things to lead with.
+4. **Contact** takes email, phone, address and opening hours.
+
+Only the business name is required. Every other field shows that template's own
+copy as a grey placeholder, and a blank answer falls back to it, so a user can
+type one thing and still get a complete site.
+
+`resolveProfile()` merges the answers over `TemplateDefaults`, and every
+template renders from the resulting `BrandProfile`. No template hardcodes a
+company name, address or email any more, and a test asserts it: building any
+template with a real name must not leave a trace of the old placeholder
+identity anywhere in the document.
+
+A chosen brand colour flows into the theme *and* the generated artwork, so a
+green business does not end up with an indigo hero image.
 
 ### Routes
 

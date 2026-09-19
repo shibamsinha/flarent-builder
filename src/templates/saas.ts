@@ -1,12 +1,30 @@
 import { n } from '@/engine/registry/build';
 import { itemId } from '@/engine/registry/components/shared';
-import { assembleProject, contactPage, footer, navbar, pageLink, urlLink } from './kit';
+import type { BrandProfile, ProfileInput, TemplateDefaults } from '@/onboarding/profile';
+import { resolveProfile } from '@/onboarding/profile';
+import { artColors, assembleForProfile, contactPage, footer, navbar, pageLink, urlLink } from './kit';
 import { blobArt, tileArt } from './imagery';
 import type { TemplateDefinition } from './types';
 
-const BRAND = 'Cadence';
 const PRIMARY = '#7217b2';
 const SECONDARY = '#ac13eb';
+
+const DEFAULTS: TemplateDefaults = {
+  tagline: 'Scheduling and capacity planning for service teams.',
+  description:
+    'Turn your team real availability into a plan you can commit to, so projects stop slipping and nobody ends up with three deadlines on the same Friday.',
+  email: 'hello@example.com',
+  phone: '+44 191 406 7720',
+  whatsapp: '+441914067720',
+  street: '60 Grainger Street',
+  city: 'Newcastle NE1 5JG',
+  hours: 'Support Mon-Fri 08:00-19:00\nStatus page updated live',
+  offerings: [
+    { title: 'Live capacity', body: 'Every booking, holiday and recurring commitment in one view, updated as soon as anything moves.' },
+    { title: 'Forecasting', body: 'See the next twelve weeks before you say yes. The first week that breaks is flagged for you.' },
+    { title: 'Skills matching', body: 'Assign by who can actually do the work, not just who has a gap in the calendar.' },
+  ],
+};
 
 export const saasTemplate: TemplateDefinition = {
   id: 'saas-startup',
@@ -14,12 +32,14 @@ export const saasTemplate: TemplateDefinition = {
   description: 'Product marketing site with feature grid, pricing tiers and clear signup.',
   tag: 'Software',
   accent: [PRIMARY, SECONDARY],
-  build: (projectName) =>
-    assembleProject(
+  defaults: DEFAULTS,
+  build: (input: ProfileInput) => {
+    const p = resolveProfile(input, DEFAULTS);
+    return assembleForProfile(
       {
         templateId: 'saas-startup',
-        siteName: BRAND,
-        description: 'Scheduling and capacity planning for service teams.',
+        siteName: p.businessName,
+        description: p.tagline,
         theme: {
           colors: {
             primary: PRIMARY,
@@ -36,41 +56,29 @@ export const saasTemplate: TemplateDefinition = {
           containerWidth: 1140,
         },
         pages: [
-          { name: 'Home', nodes: home() },
-          { name: 'Features', nodes: features() },
-          { name: 'Pricing', nodes: pricing() },
+          { name: 'Home', nodes: home(p) },
+          { name: 'Features', nodes: features(p) },
+          { name: 'Pricing', nodes: pricing(p) },
           {
             name: 'Contact',
             nodes: contactPage({
-              brand: BRAND,
+              profile: p,
               intro: 'Questions about a rollout, security review or migration? Talk to a human.',
-              address: '2nd Floor, 60 Grainger Street, Newcastle',
-              phone: '+44 191 406 7720',
-              email: 'hello@cadence.app',
-              whatsapp: '+441914067720',
               surface: '#f8f4fd',
             }),
           },
         ],
       },
-      projectName,
-    ),
+      p,
+    );
+  },
 };
 
-const footerNode = () =>
-  footer({
-    brand: BRAND,
-    tagline: 'Scheduling and capacity planning for service teams that run on people, not tickets.',
-    email: 'hello@cadence.app',
-    phone: '+44 191 406 7720',
-    address: '60 Grainger Street<br>Newcastle NE1 5JG',
-    hoursNote: 'Support Mon-Fri 08:00-19:00<br>Status page updated live',
-    background: '#16101f',
-  });
+const footerNode = (p: BrandProfile) => footer({ profile: p, background: '#16101f' });
 
-function home() {
+function home(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Start free trial', ctaPage: 'Pricing' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Start free trial', ctaPage: 'Pricing' }),
     n('hero', {}, {
       desktop: {
         paddingTop: 108,
@@ -93,7 +101,7 @@ function home() {
           tablet: { fontSize: 48 },
           mobile: { fontSize: 34 },
         }),
-        n('text', { text: 'Cadence turns your team’s real availability into a plan you can commit to, so projects stop slipping and nobody ends up with three deadlines on the same Friday.' }, {
+        n('text', { text: p.description }, {
           desktop: { fontSize: 20, textAlign: 'center', maxWidth: 660 },
         }),
         n('flex', {}, { desktop: { gap: 12, justifyContent: 'center', width: 'auto' }, mobile: { flexDirection: 'column' } }, [
@@ -103,7 +111,10 @@ function home() {
         n('text', { text: 'No card required · Set up in an afternoon · Cancel any time' }, {
           desktop: { fontSize: 14, textAlign: 'center' },
         }),
-        n('image', { src: tileArt({ from: PRIMARY, to: SECONDARY, width: 1400, height: 800 }), alt: 'Cadence dashboard' }, {
+        n('image', {
+          src: tileArt({ ...artColors(p, PRIMARY, SECONDARY), width: 1400, height: 800 }),
+          alt: `${p.businessName} dashboard`,
+        }, {
           desktop: { height: 480, borderRadius: 20, marginTop: 20, boxShadow: '0 40px 80px -40px rgba(114,23,178,.55)' },
           mobile: { height: 220 },
         }),
@@ -125,14 +136,14 @@ function home() {
           n('heading', { text: 'Built for the way service work actually runs', level: 'h2' }, {
             desktop: { textAlign: 'center', fontSize: 40 }, mobile: { fontSize: 28 },
           }),
-          n('text', { text: 'Not another ticket queue. Cadence models people, hours and commitments: the three things that decide whether a date is real.' }, {
+          n('text', { text: `Not another ticket queue. ${p.businessName} models people, hours and commitments: the three things that decide whether a date is real.` }, {
             desktop: { textAlign: 'center' },
           }),
         ]),
         n('grid', { columns: 3 }, {}, [
-          feature('Calendar', 'Live capacity', 'Every booking, holiday and recurring commitment in one view, updated as soon as anything moves.'),
-          feature('ChartBar', 'Forecasting', 'See the next twelve weeks before you say yes. Cadence flags the week that breaks first.'),
-          feature('Users', 'Skills matching', 'Assign by who can actually do the work, not just who has a gap in the calendar.'),
+          feature('Calendar', p.offerings[0].title, p.offerings[0].body),
+          feature('ChartBar', p.offerings[1].title, p.offerings[1].body),
+          feature('Users', p.offerings[2].title, p.offerings[2].body),
           feature('Zap', 'Two-way sync', 'Google and Outlook calendars sync both ways, so nobody has to update two systems.'),
           feature('ShieldCheck', 'Audit trail', 'Every change to a plan is recorded with who made it and why. Useful when a client asks.'),
           feature('Send', 'Client updates', 'Share a read-only plan link. Clients see progress without another status meeting.'),
@@ -161,7 +172,7 @@ function home() {
         n('button', { label: 'Start free trial', variant: 'secondary', size: 'lg', link: pageLink('Pricing') }),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
@@ -179,7 +190,7 @@ function feature(icon: string, title: string, body: string) {
   ]);
 }
 
-function features() {
+function features(p: BrandProfile) {
   const row = (title: string, body: string, points: string[], art: string, reverse: boolean) => {
     const copy = n('column', {}, { desktop: { gap: 16 } }, [
       n('heading', { text: title, level: 'h2' }, { desktop: { fontSize: 36 }, mobile: { fontSize: 26 } }),
@@ -204,28 +215,28 @@ function features() {
   };
 
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Start free trial', ctaPage: 'Pricing' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Start free trial', ctaPage: 'Pricing' }),
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 32, backgroundColor: '#f8f4fd' } }, [
       n('container', {}, { desktop: { gap: 16, alignItems: 'center', textAlign: 'center', maxWidth: 740 } }, [
-        n('heading', { text: 'Everything Cadence does', level: 'h1' }, {
+        n('heading', { text: `Everything ${p.businessName} does`, level: 'h1' }, {
           desktop: { fontSize: 54, textAlign: 'center' }, mobile: { fontSize: 34 },
         }),
-        n('text', { text: 'Four capabilities, each built because a customer could not run their week without it.' }, {
+        n('text', { text: 'Every capability here exists because a customer could not run their week without it.' }, {
           desktop: { fontSize: 18, textAlign: 'center' },
         }),
       ]),
     ]),
     row('Live capacity', 'One view of who is available, when, and for how long, across every team and location.', ['Holidays, part-time patterns and recurring commitments included', 'Filter by skill, team, location or client', 'Updates the moment anything changes'], tileArt({ from: PRIMARY, to: SECONDARY, width: 1100, height: 760 }), false),
-    row('Twelve-week forecast', 'Look forward far enough to do something about it. Cadence highlights the first week that breaks.', ['Scenario planning for work you have not won yet', 'Flags over-allocation before it reaches a person', 'Export to CSV for finance'], blobArt({ from: '#16c79a', to: PRIMARY, width: 1100, height: 760 }), true),
+    row('Twelve-week forecast', 'Look forward far enough to do something about it. The first week that breaks is highlighted for you.', ['Scenario planning for work you have not won yet', 'Flags over-allocation before it reaches a person', 'Export to CSV for finance'], blobArt({ from: '#16c79a', to: PRIMARY, width: 1100, height: 760 }), true),
     row('Two-way calendar sync', 'Google Workspace and Microsoft 365, synced both ways, so nobody maintains two calendars.', ['Set up per team in minutes', 'Respects private event visibility', 'Conflicts surfaced, never silently overwritten'], tileArt({ from: SECONDARY, to: '#16c79a', width: 1100, height: 760 }), false),
     row('Shared client plans', 'A read-only link clients can check themselves, instead of another status call.', ['Shows milestones, not internal detail', 'Revoke access at any time', 'Branded with your own logo and colours'], blobArt({ from: PRIMARY, to: '#16101f', width: 1100, height: 760 }), true),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
-function pricing() {
+function pricing(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Start free trial', ctaPage: 'Pricing' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Start free trial', ctaPage: 'Pricing' }),
     n('pricing', {
       title: 'Pricing that scales with the team',
       subtitle: 'Billed per active person, per month. Fourteen-day trial on every plan.',
@@ -246,6 +257,6 @@ function pricing() {
         { id: itemId(), question: 'What happens after the trial?', answer: 'Nothing automatic. The account pauses until you choose a plan, and your data stays available for ninety days.' },
       ],
     }, { desktop: { backgroundColor: '#f8f4fd' } }),
-    footerNode(),
+    footerNode(p),
   ];
 }

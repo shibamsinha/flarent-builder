@@ -1,13 +1,31 @@
 import { n } from '@/engine/registry/build';
 import { itemId } from '@/engine/registry/components/shared';
-import { assembleProject, contactPage, footer, navbar, pageLink } from './kit';
+import type { BrandProfile, ProfileInput, TemplateDefaults } from '@/onboarding/profile';
+import { resolveProfile } from '@/onboarding/profile';
+import { assembleForProfile, contactPage, footer, navbar, pageLink } from './kit';
 import { bandArt, blobArt, tileArt } from './imagery';
 import type { TemplateDefinition } from './types';
 
-const BRAND = 'Ironworks Gym';
 const PRIMARY = '#c8ff4d';
 const INK = '#0d0f12';
 const SURFACE = '#15181d';
+
+const DEFAULTS: TemplateDefaults = {
+  tagline: 'Coached strength and conditioning. No mirrors, no nonsense.',
+  description:
+    'Coached small-group training for people who want to lift properly, move well and still be doing it in twenty years.',
+  email: 'train@example.com',
+  phone: '+44 113 496 0180',
+  whatsapp: '+441134960180',
+  street: 'Unit 7, Dockside Works',
+  city: 'Leeds LS10 1AA',
+  hours: 'Mon-Fri 05:30-21:30\nSat-Sun 07:00-16:00',
+  offerings: [
+    { title: 'Strength', body: 'Barbell-led sessions built around the big lifts, coached in groups of twelve or fewer.' },
+    { title: 'Conditioning', body: 'Thirty-five minutes of hard, well-programmed work. In, out, done properly.' },
+    { title: 'One to one', body: 'Private coaching for a specific goal, an injury to work around, or a competition date.' },
+  ],
+};
 
 export const gymTemplate: TemplateDefinition = {
   id: 'gym-fitness',
@@ -15,12 +33,14 @@ export const gymTemplate: TemplateDefinition = {
   description: 'High-contrast dark site with classes, memberships and a strong join flow.',
   tag: 'Health & fitness',
   accent: [PRIMARY, '#7fd400'],
-  build: (projectName) =>
-    assembleProject(
+  defaults: DEFAULTS,
+  build: (input: ProfileInput) => {
+    const p = resolveProfile(input, DEFAULTS);
+    return assembleForProfile(
       {
         templateId: 'gym-fitness',
-        siteName: BRAND,
-        description: 'Strength and conditioning gym with coached classes seven days a week.',
+        siteName: p.businessName,
+        description: p.tagline,
         theme: {
           colors: {
             primary: PRIMARY,
@@ -37,41 +57,29 @@ export const gymTemplate: TemplateDefinition = {
           containerWidth: 1180,
         },
         pages: [
-          { name: 'Home', nodes: home() },
-          { name: 'Classes', nodes: classes() },
-          { name: 'Membership', nodes: membership() },
+          { name: 'Home', nodes: home(p) },
+          { name: 'Classes', nodes: classes(p) },
+          { name: 'Membership', nodes: membership(p) },
           {
             name: 'Contact',
             nodes: contactPage({
-              brand: BRAND,
+              profile: p,
               intro: 'Want to try a session before you commit? Tell us when you can make it.',
-              address: 'Unit 7, Dockside Works, Leeds',
-              phone: '+44 113 496 0180',
-              email: 'train@ironworksgym.co.uk',
-              whatsapp: '+441134960180',
               surface: SURFACE,
             }),
           },
         ],
       },
-      projectName,
-    ),
+      p,
+    );
+  },
 };
 
-const footerNode = () =>
-  footer({
-    brand: BRAND,
-    tagline: 'Coached strength and conditioning. No mirrors, no nonsense.',
-    email: 'train@ironworksgym.co.uk',
-    phone: '+44 113 496 0180',
-    address: 'Unit 7, Dockside Works<br>Leeds LS10 1AA',
-    hoursNote: 'Mon-Fri 05:30-21:30<br>Sat-Sun 07:00-16:00',
-    background: '#05070a',
-  });
+const footerNode = (p: BrandProfile) => footer({ profile: p, background: '#05070a' });
 
-function home() {
+function home(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Join now', ctaPage: 'Membership', background: INK, text: '#f4f6f8' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Join now', ctaPage: 'Membership', background: INK, text: '#f4f6f8' }),
     n('hero', {}, {
       desktop: {
         paddingTop: 140,
@@ -84,7 +92,7 @@ function home() {
       mobile: { paddingTop: 92, paddingBottom: 92 },
     }, [
       n('container', {}, { desktop: { gap: 24, maxWidth: 900 } }, [
-        n('text', { text: 'Leeds · Dockside Works' }, {
+        n('text', { text: `${p.city} · ${p.street}` }, {
           desktop: { color: PRIMARY, letterSpacing: '0.2em', textTransform: 'uppercase', fontSize: 13, fontWeight: 600 },
         }),
         n('heading', { text: 'Get strong. Stay strong.', level: 'h1' }, {
@@ -92,7 +100,7 @@ function home() {
           tablet: { fontSize: 58 },
           mobile: { fontSize: 40 },
         }),
-        n('text', { text: 'Coached small-group training for people who want to lift properly, move well and still be doing it in twenty years.' }, {
+        n('text', { text: p.description }, {
           desktop: { fontSize: 20, maxWidth: 580, color: '#c3cbd4' },
         }),
         n('flex', {}, { desktop: { gap: 12, width: 'auto', marginTop: 8 }, mobile: { flexDirection: 'column' } }, [
@@ -120,9 +128,9 @@ function home() {
           mobile: { fontSize: 30 },
         }),
         n('grid', { columns: 3 }, {}, [
-          trainCard('Dumbbell', 'Strength', 'Barbell-led sessions built around the big lifts, coached in groups of twelve or fewer.'),
-          trainCard('HeartPulse', 'Conditioning', 'Thirty-five minutes of hard, well-programmed work. In, out, done properly.'),
-          trainCard('UserCheck', 'One to one', 'Private coaching for a specific goal, an injury to work around, or a competition date.'),
+          trainCard('Dumbbell', p.offerings[0].title, p.offerings[0].body),
+          trainCard('HeartPulse', p.offerings[1].title, p.offerings[1].body),
+          trainCard('UserCheck', p.offerings[2].title, p.offerings[2].body),
         ]),
       ]),
     ]),
@@ -161,7 +169,7 @@ function home() {
         }),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
@@ -183,7 +191,7 @@ function trainCard(icon: string, title: string, body: string) {
   ]);
 }
 
-function classes() {
+function classes(p: BrandProfile) {
   const slot = (time: string, name: string, coach: string) =>
     n('flex', {}, {
       desktop: { justifyContent: 'space-between', alignItems: 'center', gap: 16, paddingTop: 14, paddingBottom: 14, borderColor: '#242a31' },
@@ -202,7 +210,7 @@ function classes() {
     ]);
 
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Join now', ctaPage: 'Membership', background: INK, text: '#f4f6f8' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Join now', ctaPage: 'Membership', background: INK, text: '#f4f6f8' }),
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 40, backgroundColor: SURFACE } }, [
       n('container', {}, { desktop: { gap: 14, maxWidth: 780 } }, [
         n('heading', { text: 'Timetable', level: 'h1' }, {
@@ -241,13 +249,13 @@ function classes() {
         ]),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
-function membership() {
+function membership(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Join now', ctaPage: 'Membership', background: INK, text: '#f4f6f8' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Join now', ctaPage: 'Membership', background: INK, text: '#f4f6f8' }),
     n('pricing', {
       title: 'Membership',
       subtitle: 'No joining fee. Cancel with thirty days’ notice, any time.',
@@ -268,6 +276,6 @@ function membership() {
         { id: itemId(), question: 'Is there parking?', answer: 'Free on-site parking for members, plus secure bike storage inside the unit.' },
       ],
     }, { desktop: { backgroundColor: INK } }),
-    footerNode(),
+    footerNode(p),
   ];
 }

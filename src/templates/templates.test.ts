@@ -14,7 +14,7 @@ describe.each(TEMPLATES.map((template) => [template.name, template] as const))(
     let project: Project;
 
     beforeAll(() => {
-      project = template.build('My test site');
+      project = template.build({ businessName: 'My test site' });
     });
 
     it('builds a usable project', () => {
@@ -88,6 +88,82 @@ describe.each(TEMPLATES.map((template) => [template.name, template] as const))(
   },
 );
 
+/**
+ * The whole point of onboarding: picking a template must never hand someone a
+ * site about a different company. If a template hardcodes an identity again,
+ * this fails.
+ */
+describe('templates carry the user identity, not a placeholder one', () => {
+  const PLACEHOLDERS = [
+    'Northgate', 'northgatepartners',
+    'Olive & Ash', 'oliveandash',
+    'Ironworks', 'ironworksgym',
+    'Marlowe', 'marlowe.design',
+    'Cadence', 'cadence.app',
+  ];
+
+  function siteText(project: Project): string {
+    const parts: string[] = [project.name, project.settings.siteName, project.settings.description];
+    for (const page of project.pages) {
+      parts.push(page.name, page.seo.title ?? '');
+      walkTree(page.nodes, (node) => {
+        parts.push(JSON.stringify(node.props));
+      });
+    }
+    return parts.join(' ');
+  }
+
+  it.each(TEMPLATES.map((t) => [t.name, t] as const))(
+    '%s contains no placeholder company name',
+    (_name, template) => {
+      const text = siteText(template.build({ businessName: 'Riverside Dental' }));
+      for (const placeholder of PLACEHOLDERS) {
+        expect(text, `${placeholder} leaked into the built site`).not.toContain(placeholder);
+      }
+    },
+  );
+
+  it.each(TEMPLATES.map((t) => [t.name, t] as const))(
+    '%s uses the real business name and contact details',
+    (_name, template) => {
+      const project = template.build({
+        businessName: 'Riverside Dental',
+        email: 'hi@riverside.test',
+        phone: '+44 7700 900123',
+        street: '12 Mill Lane',
+        city: 'Bath',
+      });
+      const text = siteText(project);
+
+      expect(project.name).toBe('Riverside Dental');
+      expect(project.settings.siteName).toBe('Riverside Dental');
+      expect(text).toContain('Riverside Dental');
+      expect(text).toContain('hi@riverside.test');
+      expect(text).toContain('+44 7700 900123');
+      expect(text).toContain('12 Mill Lane');
+    },
+  );
+
+  it.each(TEMPLATES.map((t) => [t.name, t] as const))(
+    '%s applies a chosen brand colour',
+    (_name, template) => {
+      const project = template.build({ businessName: 'Riverside Dental', primaryColor: '#123456' });
+      expect(project.theme.colors.primary).toBe('#123456');
+    },
+  );
+
+  it.each(TEMPLATES.map((t) => [t.name, t] as const))(
+    '%s still builds a full site from just a name',
+    (_name, template) => {
+      const project = template.build({ businessName: 'Riverside Dental' });
+      expect(project.pages.length).toBeGreaterThan(0);
+      for (const page of project.pages) {
+        expect(page.nodes.length).toBeGreaterThan(0);
+      }
+    },
+  );
+});
+
 describe('template catalogue', () => {
   it('ships the five starting templates plus a blank one', () => {
     expect(TEMPLATES.length).toBeGreaterThanOrEqual(6);
@@ -106,8 +182,8 @@ describe('template catalogue', () => {
   });
 
   it('builds independent projects each time', () => {
-    const a = TEMPLATES[0].build('A');
-    const b = TEMPLATES[0].build('B');
+    const a = TEMPLATES[0].build({ businessName: 'A' });
+    const b = TEMPLATES[0].build({ businessName: 'B' });
     expect(a.id).not.toBe(b.id);
     expect(a.pages[0].id).not.toBe(b.pages[0].id);
   });

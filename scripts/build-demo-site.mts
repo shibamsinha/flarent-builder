@@ -17,7 +17,7 @@ const outRoot = join(process.cwd(), 'demo-export');
 await rm(outRoot, { recursive: true, force: true });
 
 for (const template of TEMPLATES) {
-  let project = template.build(template.name);
+  let project = template.build({ businessName: template.name });
   project = commands.updateSettings(project, { baseUrl: `https://${template.id}.example.com` });
 
   const files = await buildStaticSite(project);

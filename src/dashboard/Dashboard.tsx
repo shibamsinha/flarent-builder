@@ -11,7 +11,8 @@ import {
   renameProject,
 } from '@/project/projectService';
 import { getTemplate } from '@/templates';
-import { TemplatePicker } from './TemplatePicker';
+import type { ProfileInput } from '@/onboarding/profile';
+import { OnboardingFlow } from '@/onboarding/OnboardingFlow';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -36,8 +37,8 @@ export function Dashboard() {
     void refresh();
   }, [refresh]);
 
-  async function handleCreate(templateId: string, name: string) {
-    const project = await createProjectFromTemplate(templateId, name);
+  async function handleCreate(templateId: string, profile: ProfileInput) {
+    const project = await createProjectFromTemplate(templateId, profile);
     setPicking(false);
     navigate(`/edit/${project.id}`);
   }
@@ -113,7 +114,7 @@ export function Dashboard() {
         )}
       </main>
 
-      {picking ? <TemplatePicker onClose={() => setPicking(false)} onCreate={handleCreate} /> : null}
+      {picking ? <OnboardingFlow onClose={() => setPicking(false)} onCreate={handleCreate} /> : null}
 
       {renaming ? (
         <RenameDialog

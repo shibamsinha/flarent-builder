@@ -1,13 +1,31 @@
 import { n } from '@/engine/registry/build';
 import { itemId } from '@/engine/registry/components/shared';
-import { assembleProject, contactPage, footer, navbar, pageLink } from './kit';
+import type { BrandProfile, ProfileInput, TemplateDefaults } from '@/onboarding/profile';
+import { fullAddress, resolveProfile } from '@/onboarding/profile';
+import { artColors, assembleForProfile, contactPage, footer, navbar, pageLink } from './kit';
 import { bandArt, blobArt, tileArt } from './imagery';
 import type { TemplateDefinition } from './types';
 
-const BRAND = 'Olive & Ash';
 const PRIMARY = '#b4552d';
 const SECONDARY = '#d98a4f';
 const INK = '#241a14';
+
+const DEFAULTS: TemplateDefaults = {
+  tagline: 'Seasonal cooking over charcoal',
+  description:
+    'A short menu that changes with the season, cooked over charcoal and shared across the table.',
+  email: 'bookings@example.com',
+  phone: '+1 (555) 204 8811',
+  whatsapp: '+15552048811',
+  street: '42 Fisher Street',
+  city: 'Old Town',
+  hours: 'Tue-Thu 17:00-22:00\nFri-Sat 12:00-23:00\nSun 12:00-17:00',
+  offerings: [
+    { title: 'Charred aubergine', body: 'Smoked yoghurt, pomegranate, mint' },
+    { title: 'Whole sea bream', body: 'Fennel, lemon, new potatoes' },
+    { title: 'Lamb shoulder', body: 'Six hours, flatbread, pickled chilli' },
+  ],
+};
 
 export const restaurantTemplate: TemplateDefinition = {
   id: 'restaurant',
@@ -15,12 +33,14 @@ export const restaurantTemplate: TemplateDefinition = {
   description: 'Warm, appetising site with a menu, gallery, hours and table enquiries.',
   tag: 'Food & drink',
   accent: [PRIMARY, SECONDARY],
-  build: (projectName) =>
-    assembleProject(
+  defaults: DEFAULTS,
+  build: (input: ProfileInput) => {
+    const p = resolveProfile(input, DEFAULTS);
+    return assembleForProfile(
       {
         templateId: 'restaurant',
-        siteName: BRAND,
-        description: 'Seasonal Mediterranean cooking in the old town.',
+        siteName: p.businessName,
+        description: p.tagline,
         theme: {
           colors: {
             primary: PRIMARY,
@@ -37,54 +57,42 @@ export const restaurantTemplate: TemplateDefinition = {
           containerWidth: 1120,
         },
         pages: [
-          { name: 'Home', nodes: home() },
-          { name: 'Menu', nodes: menu() },
-          { name: 'About', nodes: about() },
+          { name: 'Home', nodes: home(p) },
+          { name: 'Menu', nodes: menu(p) },
+          { name: 'About', nodes: about(p) },
           {
             name: 'Contact',
             nodes: contactPage({
-              brand: BRAND,
+              profile: p,
               intro: 'Booking a table, planning a party or just after a recommendation? Drop us a line.',
-              address: '42 Fisher Street, Old Town',
-              phone: '+1 (555) 204 8811',
-              email: 'reservations@oliveandash.com',
-              whatsapp: '+15552048811',
               surface: '#f5e9dd',
             }),
           },
         ],
       },
-      projectName,
-    ),
+      p,
+    );
+  },
 };
 
-const footerNode = () =>
-  footer({
-    brand: BRAND,
-    tagline: 'Seasonal Mediterranean cooking, served in the old town since 2011.',
-    email: 'reservations@oliveandash.com',
-    phone: '+1 (555) 204 8811',
-    address: '42 Fisher Street<br>Old Town',
-    hoursNote: 'Tue-Thu 17:00-22:00<br>Fri-Sat 12:00-23:00<br>Sun 12:00-17:00',
-    background: INK,
-  });
+const footerNode = (p: BrandProfile) => footer({ profile: p, background: INK });
 
-function home() {
+function home(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Book a table', ctaPage: 'Contact', background: '#fdf8f3' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Book a table', ctaPage: 'Contact', background: '#fdf8f3' }),
     n('hero', {}, {
       desktop: {
         paddingTop: 150,
         paddingBottom: 150,
         backgroundColor: INK,
-        backgroundImage: `linear-gradient(rgba(36,26,20,.62), rgba(36,26,20,.72)), url("${blobArt({ from: PRIMARY, to: '#7a3a1c', tint: '#f6d9b8' })}")`,
+        backgroundImage: `linear-gradient(rgba(36,26,20,.62), rgba(36,26,20,.72)), url("${blobArt({ ...artColors(p, PRIMARY, '#7a3a1c'), tint: '#f6d9b8' })}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       },
       mobile: { paddingTop: 96, paddingBottom: 96 },
     }, [
       n('container', {}, { desktop: { alignItems: 'center', textAlign: 'center', gap: 22, maxWidth: 760 } }, [
-        n('text', { text: 'Mediterranean · Old Town · Since 2011' }, {
+        n('text', { text: `${p.city} · ${p.tagline}` }, {
           desktop: { color: '#e6c9a8', letterSpacing: '0.18em', textTransform: 'uppercase', fontSize: 13, textAlign: 'center' },
         }),
         n('heading', { text: 'Slow food, open fire, generous plates', level: 'h1' }, {
@@ -92,7 +100,7 @@ function home() {
           tablet: { fontSize: 48 },
           mobile: { fontSize: 34 },
         }),
-        n('text', { text: 'A short menu that changes with the season, cooked over charcoal and shared across the table.' }, {
+        n('text', { text: p.description }, {
           desktop: { color: 'rgba(255,255,255,0.8)', fontSize: 19, textAlign: 'center', maxWidth: 560 },
         }),
         n('flex', {}, { desktop: { gap: 12, justifyContent: 'center', width: 'auto' }, mobile: { flexDirection: 'column' } }, [
@@ -128,9 +136,9 @@ function home() {
       n('container', {}, { desktop: { gap: 40 } }, [
         n('heading', { text: 'From tonight’s menu', level: 'h2' }, { desktop: { textAlign: 'center', fontSize: 40 } }),
         n('grid', { columns: 3 }, {}, [
-          dish('Charred aubergine', 'Smoked yoghurt, pomegranate, mint', '12'),
-          dish('Whole sea bream', 'Fennel, lemon, new potatoes', '28'),
-          dish('Lamb shoulder', 'Six hours, flatbread, pickled chilli', '32'),
+          dish(p.offerings[0].title, p.offerings[0].body, '12'),
+          dish(p.offerings[1].title, p.offerings[1].body, '28'),
+          dish(p.offerings[2].title, p.offerings[2].body, '32'),
         ]),
         n('button', { label: 'See the full menu', link: pageLink('Menu'), size: 'lg' }, {
           desktop: { marginLeft: 'auto', marginRight: 'auto' },
@@ -175,7 +183,7 @@ function home() {
               { id: itemId(), day: 'Sunday', hours: '12:00 - 17:00', closed: false },
             ],
           }, { desktop: { backgroundColor: '#f5e9dd' } })]),
-          n('column', {}, {}, [n('map', { address: '42 Fisher Street, Old Town', height: 340 })]),
+          n('column', {}, {}, [n('map', { address: fullAddress(p), height: 340 })]),
         ]),
       ]),
     ]),
@@ -189,17 +197,22 @@ function home() {
         }),
         n('flex', {}, { desktop: { gap: 12, justifyContent: 'center', width: 'auto' }, mobile: { flexDirection: 'column' } }, [
           n('button', { label: 'Book a table', size: 'lg', link: pageLink('Contact') }),
-          n('whatsapp', { phone: '+15552048811', label: 'Message us', message: 'Hi! I would like to book a table at Olive & Ash.', size: 'lg' }),
+          n('whatsapp', {
+            phone: p.whatsapp,
+            label: 'Message us',
+            message: `Hi ${p.businessName}, I would like to book a table.`,
+            size: 'lg',
+          }),
         ]),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
-function menu() {
+function menu(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Book a table', ctaPage: 'Contact', background: '#fdf8f3' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Book a table', ctaPage: 'Contact', background: '#fdf8f3' }),
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 40, backgroundColor: '#f5e9dd' } }, [
       n('container', {}, { desktop: { gap: 14, alignItems: 'center', textAlign: 'center', maxWidth: 700 } }, [
         n('heading', { text: 'The menu', level: 'h1' }, { desktop: { fontSize: 56, textAlign: 'center' }, mobile: { fontSize: 36 } }),
@@ -229,7 +242,7 @@ function menu() {
         ]),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
@@ -256,9 +269,9 @@ function dish(name: string, description: string, price: string) {
   ]);
 }
 
-function about() {
+function about(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Book a table', ctaPage: 'Contact', background: '#fdf8f3' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Book a table', ctaPage: 'Contact', background: '#fdf8f3' }),
     n('section', {}, { desktop: { paddingTop: 88, paddingBottom: 72 } }, [
       n('container', {}, {}, [
         n('columns', { count: 2, ratio: '1:2' }, { desktop: { gap: 52, alignItems: 'center' } }, [
@@ -268,16 +281,16 @@ function about() {
             }),
           ]),
           n('column', {}, { desktop: { gap: 20 } }, [
-            n('heading', { text: 'Fourteen years on Fisher Street', level: 'h1' }, {
+            n('heading', { text: `Our story in ${p.city}`, level: 'h1' }, {
               desktop: { fontSize: 46 }, mobile: { fontSize: 32 },
             }),
-            n('text', { text: 'Olive & Ash started as a six-table room with one grill and a very short menu. Not much has changed except the number of tables.' }, { desktop: { fontSize: 18 } }),
+            n('text', { text: `${p.businessName} started as a six-table room with one grill and a very short menu. Not much has changed except the number of tables.` }, { desktop: { fontSize: 18 } }),
             n('text', { text: 'We buy from the same four suppliers we started with, cook what they bring, and write the menu that afternoon. If something runs out, it runs out.' }, { desktop: { fontSize: 18 } }),
             n('text', { text: 'Everyone who works here eats together before service. It is the best way we know to keep the food honest.' }, { desktop: { fontSize: 18 } }),
           ]),
         ]),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }

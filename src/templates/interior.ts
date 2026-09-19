@@ -1,12 +1,30 @@
 import { n } from '@/engine/registry/build';
 import { itemId } from '@/engine/registry/components/shared';
-import { assembleProject, contactPage, footer, navbar, pageLink } from './kit';
+import type { BrandProfile, ProfileInput, TemplateDefaults } from '@/onboarding/profile';
+import { resolveProfile } from '@/onboarding/profile';
+import { artColors, assembleForProfile, contactPage, footer, navbar, pageLink } from './kit';
 import { bandArt, blobArt, tileArt } from './imagery';
 import type { TemplateDefinition } from './types';
 
-const BRAND = 'Marlowe Studio';
 const PRIMARY = '#8a7355';
 const INK = '#2a2622';
+
+const DEFAULTS: TemplateDefaults = {
+  tagline: 'Interior architecture and furnishing for homes that are actually lived in.',
+  description:
+    'Whole-house interiors for period properties and new builds, from structural planning through to the last lamp.',
+  email: 'studio@example.com',
+  phone: '+44 117 325 0044',
+  whatsapp: '+441173250044',
+  street: '3 Bellevue Mews',
+  city: 'Bristol BS8 2QF',
+  hours: 'Studio visits by appointment\nMon-Thu 09:00-17:00',
+  offerings: [
+    { title: 'Measured survey', body: 'Full drawings of the house as it stands, so nothing is a surprise later.' },
+    { title: 'Material palette', body: 'Physical samples of every finish, assembled in your own light before anything is ordered.' },
+    { title: 'Cost schedule', body: 'A line-by-line budget you own, with our fee stated separately and never taken as a percentage.' },
+  ],
+};
 
 export const interiorTemplate: TemplateDefinition = {
   id: 'interior-design',
@@ -14,12 +32,14 @@ export const interiorTemplate: TemplateDefinition = {
   description: 'Editorial, image-led studio site with a project portfolio and process.',
   tag: 'Design studio',
   accent: [PRIMARY, '#c4b29a'],
-  build: (projectName) =>
-    assembleProject(
+  defaults: DEFAULTS,
+  build: (input: ProfileInput) => {
+    const p = resolveProfile(input, DEFAULTS);
+    return assembleForProfile(
       {
         templateId: 'interior-design',
-        siteName: BRAND,
-        description: 'Interior architecture and furnishing for homes that are actually lived in.',
+        siteName: p.businessName,
+        description: p.tagline,
         theme: {
           colors: {
             primary: PRIMARY,
@@ -36,41 +56,29 @@ export const interiorTemplate: TemplateDefinition = {
           containerWidth: 1200,
         },
         pages: [
-          { name: 'Home', nodes: home() },
-          { name: 'Projects', nodes: projects() },
-          { name: 'Studio', nodes: studio() },
+          { name: 'Home', nodes: home(p) },
+          { name: 'Projects', nodes: projects(p) },
+          { name: 'Studio', nodes: studio(p) },
           {
             name: 'Contact',
             nodes: contactPage({
-              brand: BRAND,
+              profile: p,
               intro: 'We take on a small number of projects each year. Tell us about yours.',
-              address: '3 Bellevue Mews, Bristol',
-              phone: '+44 117 325 0044',
-              email: 'studio@marlowe.design',
-              whatsapp: '+441173250044',
               surface: '#efeae2',
             }),
           },
         ],
       },
-      projectName,
-    ),
+      p,
+    );
+  },
 };
 
-const footerNode = () =>
-  footer({
-    brand: BRAND,
-    tagline: 'Interior architecture and furnishing, Bristol and the south west.',
-    email: 'studio@marlowe.design',
-    phone: '+44 117 325 0044',
-    address: '3 Bellevue Mews<br>Bristol BS8 2QF',
-    hoursNote: 'Studio visits by appointment<br>Mon-Thu 09:00-17:00',
-    background: INK,
-  });
+const footerNode = (p: BrandProfile) => footer({ profile: p, background: INK });
 
-function home() {
+function home(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Enquire', ctaPage: 'Contact', background: '#faf8f5' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Enquire', ctaPage: 'Contact', background: '#faf8f5' }),
     n('hero', {}, { desktop: { backgroundColor: '#faf8f5', paddingTop: 88, paddingBottom: 0 } }, [
       n('container', {}, { desktop: { gap: 44, maxWidth: 1200 } }, [
         n('container', {}, { desktop: { gap: 20, maxWidth: 820, paddingLeft: 0, paddingRight: 0, marginLeft: 0 } }, [
@@ -79,15 +87,16 @@ function home() {
             tablet: { fontSize: 46 },
             mobile: { fontSize: 32 },
           }),
-          n('text', { text: 'Marlowe Studio designs whole-house interiors for period properties and new builds across the south west, from structural planning through to the last lamp.' }, {
-            desktop: { fontSize: 19, maxWidth: 620 },
-          }),
+          n('text', { text: p.description }, { desktop: { fontSize: 19, maxWidth: 620 } }),
           n('flex', {}, { desktop: { gap: 14, width: 'auto' }, mobile: { flexDirection: 'column' } }, [
             n('button', { label: 'View projects', size: 'lg', link: pageLink('Projects') }),
             n('button', { label: 'Start an enquiry', variant: 'text', size: 'lg', link: pageLink('Contact') }),
           ]),
         ]),
-        n('image', { src: blobArt({ from: PRIMARY, to: '#c4b29a', tint: '#faf8f5', width: 1600, height: 760 }), alt: 'Recent project' }, {
+        n('image', {
+          src: blobArt({ ...artColors(p, PRIMARY, '#c4b29a'), tint: '#faf8f5', width: 1600, height: 760 }),
+          alt: 'Recent project',
+        }, {
           desktop: { height: 560, borderRadius: 6 },
           mobile: { height: 280 },
         }),
@@ -141,7 +150,7 @@ function home() {
         n('button', { label: 'Start an enquiry', variant: 'secondary', size: 'lg', link: pageLink('Contact') }),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
@@ -157,7 +166,7 @@ function step(number: string, title: string, body: string) {
   ]);
 }
 
-function projects() {
+function projects(p: BrandProfile) {
   const project = (title: string, place: string, body: string, art: string, reverse: boolean) =>
     n('section', {}, { desktop: { paddingTop: 56, paddingBottom: 56 } }, [
       n('container', {}, {}, [
@@ -184,7 +193,7 @@ function projects() {
     ]);
 
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Enquire', ctaPage: 'Contact', background: '#faf8f5' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Enquire', ctaPage: 'Contact', background: '#faf8f5' }),
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 24 } }, [
       n('container', {}, { desktop: { gap: 16, maxWidth: 760 } }, [
         n('heading', { text: 'Projects', level: 'h1' }, { desktop: { fontSize: 56, fontWeight: 500 }, mobile: { fontSize: 36 } }),
@@ -196,21 +205,21 @@ function projects() {
     project('A Georgian rectory, reordered', 'Somerset', 'Six months of structural work opened the rear of the house to the garden. New joinery throughout, a kitchen built around a single long table, and a palette taken from the original shutters.', tileArt({ from: PRIMARY, to: '#c4b29a', width: 1100, height: 850 }), false),
     project('Coastal new build', 'North Devon', 'A family home designed for salt air and wet dogs. Hard-wearing surfaces, deep storage at every entrance, and windows placed to hold the view without losing wall space.', tileArt({ from: '#5c6b5d', to: '#9db09c', width: 1100, height: 850 }), true),
     project('Clifton townhouse', 'Bristol', 'Five floors brought back into use, including a basement kitchen that now gets more light than the ground floor. Original cornicing retained and matched where it had been lost.', tileArt({ from: INK, to: PRIMARY, width: 1100, height: 850 }), false),
-    footerNode(),
+    footerNode(p),
   ];
 }
 
-function studio() {
+function studio(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Enquire', ctaPage: 'Contact', background: '#faf8f5' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Enquire', ctaPage: 'Contact', background: '#faf8f5' }),
     n('section', {}, { desktop: { paddingTop: 88, paddingBottom: 72 } }, [
       n('container', {}, {}, [
         n('columns', { count: 2 }, { desktop: { gap: 60, alignItems: 'center' } }, [
           n('column', {}, { desktop: { gap: 20 } }, [
-            n('heading', { text: 'A studio of four, in a mews in Bristol', level: 'h1' }, {
+            n('heading', { text: `A small studio in ${p.city.split(' ')[0]}`, level: 'h1' }, {
               desktop: { fontSize: 44, fontWeight: 500 }, mobile: { fontSize: 30 },
             }),
-            n('text', { text: 'Marlowe Studio was founded in 2016 by Esme Marlowe after a decade in interior architecture. We are deliberately small: every project is run by the person you first meet.' }, { desktop: { fontSize: 18 } }),
+            n('text', { text: `${p.businessName} is deliberately small: every project is run by the person you first meet.` }, { desktop: { fontSize: 18 } }),
             n('text', { text: 'We work mostly on period houses, where the answer is usually to remove something rather than add it. We draw everything, we specify everything, and we are on site the day it arrives.' }, { desktop: { fontSize: 18 } }),
           ]),
           n('column', {}, {}, [
@@ -223,13 +232,13 @@ function studio() {
       n('container', {}, { desktop: { gap: 44 } }, [
         n('heading', { text: 'What is included', level: 'h2' }, { desktop: { textAlign: 'center', fontSize: 36, fontWeight: 500 } }),
         n('grid', { columns: 3 }, {}, [
-          plain('Ruler', 'Measured survey', 'Full drawings of the house as it stands, so nothing is a surprise later.'),
-          plain('Palette', 'Material palette', 'Physical samples of every finish, assembled in your own light before anything is ordered.'),
-          plain('Clipboard', 'Cost schedule', 'A line-by-line budget you own, with our fee stated separately and never taken as a percentage.'),
+          plain('Ruler', p.offerings[0].title, p.offerings[0].body),
+          plain('Palette', p.offerings[1].title, p.offerings[1].body),
+          plain('Clipboard', p.offerings[2].title, p.offerings[2].body),
         ]),
       ]),
     ]),
-    footerNode(),
+    footerNode(p),
   ];
 }
 

@@ -5,6 +5,9 @@ import { walkTree } from '@/engine/commands/tree';
 import { n } from '@/engine/registry/build';
 import { DEFAULT_THEME } from '@/engine/schema/defaults';
 import { nodeId, pageId, projectId } from '@/utils/id';
+import type { BrandProfile } from '@/onboarding/profile';
+import { addressLines, fullAddress } from '@/onboarding/profile';
+import { lighten } from '@/utils/color';
 
 export interface PageSpec {
   name: string;
@@ -18,8 +21,34 @@ export interface SiteSpec {
   templateId: string;
   siteName: string;
   description: string;
-  theme: Partial<ThemeConfig> & { colors?: Partial<ThemeConfig['colors']> };
+  /** Only the tokens this template cares about; the rest fall back to defaults. */
+  theme: {
+    colors?: Partial<ThemeConfig['colors']>;
+    typography?: Partial<ThemeConfig['typography']>;
+    radius?: Partial<ThemeConfig['radius']>;
+    containerWidth?: number;
+  };
   pages: PageSpec[];
+}
+
+/**
+ * Assemble a site for a business.
+ *
+ * The profile is applied here rather than left for the user to find and
+ * replace: the project that lands in the editor already carries their name,
+ * contact details and wording.
+ */
+export function assembleForProfile(spec: SiteSpec, profile: BrandProfile): Project {
+  if (!profile.primaryColor) return assembleProject(spec, profile.businessName);
+
+  const themed: SiteSpec = {
+    ...spec,
+    theme: {
+      ...spec.theme,
+      colors: { ...(spec.theme.colors ?? {}), primary: profile.primaryColor },
+    },
+  };
+  return assembleProject(themed, profile.businessName);
 }
 
 /** Reference a page by name; resolved to a real id once pages exist. */
@@ -98,6 +127,21 @@ function slug(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+/**
+ * Colours for a template's decorative artwork.
+ *
+ * When the user picked a brand colour the art follows it, so a green business
+ * does not end up with an indigo hero image.
+ */
+export function artColors(
+  profile: BrandProfile,
+  fallbackFrom: string,
+  fallbackTo: string,
+): { from: string; to: string } {
+  if (!profile.primaryColor) return { from: fallbackFrom, to: fallbackTo };
+  return { from: profile.primaryColor, to: lighten(profile.primaryColor, 0.32) };
+}
+
 /* ------------------------- reusable page parts ------------------------- */
 
 export function navbar(options: {
@@ -127,14 +171,12 @@ export function navbar(options: {
 }
 
 export function footer(options: {
-  brand: string;
-  tagline: string;
-  email: string;
-  phone: string;
-  address: string;
-  hoursNote?: string;
+  profile: BrandProfile;
+  /** Overrides the profile tagline when a template wants different wording. */
+  tagline?: string;
   background?: string;
 }): BuilderNode {
+  const { profile } = options;
   const faint = 'rgba(255,255,255,0.64)';
   const column = (title: string, body: string) =>
     n('column', {}, {}, [
@@ -146,32 +188,34 @@ export function footer(options: {
     n('container', {}, { desktop: { gap: 36 } }, [
       n('columns', { count: 4 }, { desktop: { gap: 36 } }, [
         n('column', {}, {}, [
-          n('heading', { text: options.brand, level: 'h3' }, { desktop: { color: '#fff', fontSize: 22 } }),
-          n('text', { text: options.tagline }, { desktop: { color: faint, fontSize: 15 } }),
+          n('heading', { text: profile.businessName, level: 'h3' }, {
+            desktop: { color: '#fff', fontSize: 22 },
+          }),
+          n('text', { text: options.tagline ?? profile.tagline }, {
+            desktop: { color: faint, fontSize: 15 },
+          }),
           n('socialLinks', { size: 18, shape: 'circle' }, { desktop: { marginTop: 6 } }),
         ]),
-        column('Contact', `${options.email}<br>${options.phone}`),
-        column('Visit', options.address),
-        column('Hours', options.hoursNote ?? 'Mon-Fri 9:00-18:00<br>Sat 10:00-16:00'),
+        column('Contact', `${profile.email}<br>${profile.phone}`),
+        column('Visit', addressLines(profile)),
+        column('Hours', profile.hours.split('\n').join('<br>')),
       ]),
       n('divider', { color: 'rgba(255,255,255,0.14)' }),
-      n('text', { text: `© ${new Date().getFullYear()} ${options.brand}. All rights reserved.` }, {
-        desktop: { color: 'rgba(255,255,255,0.45)', fontSize: 13, textAlign: 'center' },
-      }),
+      n('text', {
+        text: `© ${new Date().getFullYear()} ${profile.businessName}. All rights reserved.`,
+      }, { desktop: { color: 'rgba(255,255,255,0.45)', fontSize: 13, textAlign: 'center' } }),
     ]),
   ]);
 }
 
 /** A complete, realistic contact page shared by every template. */
 export function contactPage(options: {
-  brand: string;
+  profile: BrandProfile;
   intro: string;
-  address: string;
-  phone: string;
-  email: string;
-  whatsapp: string;
   surface?: string;
 }): BuilderNode[] {
+  const { profile } = options;
+  const address = fullAddress(profile);
   return [
     n('section', {}, { desktop: { paddingTop: 72, paddingBottom: 24, backgroundColor: options.surface ?? 'var(--fl-color-surface)' } }, [
       n('container', {}, { desktop: { gap: 14, alignItems: 'center', textAlign: 'center', maxWidth: 720 } }, [
@@ -186,8 +230,15 @@ export function contactPage(options: {
             n('businessHours', {}),
             n('card', {}, { desktop: { gap: 10 } }, [
               n('heading', { text: 'Find us', level: 'h3' }, { desktop: { fontSize: 18 } }),
-              n('text', { text: `${options.address}<br>${options.phone}<br>${options.email}` }, { desktop: { fontSize: 15 } }),
-              n('whatsapp', { phone: options.whatsapp, label: 'Message us on WhatsApp', size: 'sm' }, { desktop: { marginTop: 8 } }),
+              n('text', {
+                text: `${addressLines(profile)}<br>${profile.phone}<br>${profile.email}`,
+              }, { desktop: { fontSize: 15 } }),
+              n('whatsapp', {
+                phone: profile.whatsapp,
+                label: 'Message us on WhatsApp',
+                message: `Hi ${profile.businessName}, I found you on your website.`,
+                size: 'sm',
+              }, { desktop: { marginTop: 8 } }),
             ]),
           ]),
           n('column', {}, {}, [n('contactForm', { layout: 'grid' })]),
@@ -195,7 +246,7 @@ export function contactPage(options: {
       ]),
     ]),
     n('section', {}, { desktop: { paddingTop: 0, paddingBottom: 88 } }, [
-      n('container', {}, {}, [n('map', { address: options.address, height: 420 })]),
+      n('container', {}, {}, [n('map', { address, height: 420 })]),
     ]),
   ];
 }

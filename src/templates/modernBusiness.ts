@@ -1,12 +1,33 @@
 import { n } from '@/engine/registry/build';
 import { itemId } from '@/engine/registry/components/shared';
-import { assembleProject, contactPage, footer, navbar, pageLink } from './kit';
+import type { BrandProfile, ProfileInput, TemplateDefaults } from '@/onboarding/profile';
+import { resolveProfile } from '@/onboarding/profile';
+import { artColors, assembleForProfile, contactPage, footer, navbar, pageLink } from './kit';
 import { blobArt, tileArt } from './imagery';
 import type { TemplateDefinition } from './types';
 
-const BRAND = 'Northgate Partners';
 const PRIMARY = '#5b3df5';
 const SECONDARY = '#8c6bff';
+
+/** Icons paired with the first, second and third offering. */
+const OFFERING_ICONS = ['Compass', 'Settings', 'TrendingUp'];
+
+const DEFAULTS: TemplateDefaults = {
+  tagline: 'Strategy and operations consultancy for companies in their next chapter.',
+  description:
+    'We work alongside founders and leadership teams to turn a crowded list of priorities into a plan the business can actually deliver.',
+  email: 'hello@example.com',
+  phone: '+44 20 7946 0122',
+  whatsapp: '+442079460122',
+  street: '18 Cornhill',
+  city: 'London EC3V 3ND',
+  hours: 'Mon-Fri 9:00-18:00\nWeekends by arrangement',
+  offerings: [
+    { title: 'Strategy reviews', body: 'A structured look at where the business makes money, where it leaks, and what to do next quarter.' },
+    { title: 'Operating models', body: 'Roles, rhythms and reporting that let a growing team run without the founder in every decision.' },
+    { title: 'Growth planning', body: 'Pricing, positioning and pipeline work grounded in your real numbers rather than benchmarks.' },
+  ],
+};
 
 export const modernBusinessTemplate: TemplateDefinition = {
   id: 'modern-business',
@@ -14,12 +35,14 @@ export const modernBusinessTemplate: TemplateDefinition = {
   description: 'Confident consultancy site with services, proof and a clear enquiry path.',
   tag: 'Professional services',
   accent: [PRIMARY, SECONDARY],
-  build: (projectName) =>
-    assembleProject(
+  defaults: DEFAULTS,
+  build: (input: ProfileInput) => {
+    const p = resolveProfile(input, DEFAULTS);
+    return assembleForProfile(
       {
         templateId: 'modern-business',
-        siteName: BRAND,
-        description: 'Strategy and operations consultancy for growing companies.',
+        siteName: p.businessName,
+        description: p.tagline,
         theme: {
           colors: {
             primary: PRIMARY,
@@ -36,34 +59,33 @@ export const modernBusinessTemplate: TemplateDefinition = {
           containerWidth: 1160,
         },
         pages: [
-          { name: 'Home', nodes: home() },
-          { name: 'Services', nodes: services() },
-          { name: 'About', nodes: about() },
+          { name: 'Home', nodes: home(p) },
+          { name: 'Services', nodes: services(p) },
+          { name: 'About', nodes: about(p) },
           {
             name: 'Contact',
             nodes: contactPage({
-              brand: BRAND,
+              profile: p,
               intro: 'Tell us what you are working on. We reply to every enquiry within one working day.',
-              address: '18 Cornhill, London EC3V 3ND',
-              phone: '+44 20 7946 0122',
-              email: 'hello@northgatepartners.com',
-              whatsapp: '+442079460122',
             }),
           },
         ],
       },
-      projectName,
-    ),
+      p,
+    );
+  },
 };
 
-function home() {
+const footerNode = (p: BrandProfile) => footer({ profile: p });
+
+function home(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Book a call', ctaPage: 'Contact' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Book a call', ctaPage: 'Contact' }),
     n('hero', {}, { desktop: { backgroundColor: '#f4f2ff', paddingTop: 104, paddingBottom: 104 } }, [
       n('container', {}, { desktop: { maxWidth: 1160 } }, [
         n('columns', { count: 2, ratio: '3:2' }, { desktop: { gap: 56, alignItems: 'center' } }, [
           n('column', {}, { desktop: { gap: 24 } }, [
-            n('text', { text: 'Strategy · Operations · Growth' }, {
+            n('text', { text: p.offerings.map((item) => item.title).join(' · ') }, {
               desktop: { color: PRIMARY, fontWeight: 600, fontSize: 14, letterSpacing: '0.12em', textTransform: 'uppercase' },
             }),
             n('heading', { text: 'Clear thinking for companies in their next chapter', level: 'h1' }, {
@@ -71,9 +93,7 @@ function home() {
               tablet: { fontSize: 44 },
               mobile: { fontSize: 33 },
             }),
-            n('text', {
-              text: 'We work alongside founders and leadership teams to turn a crowded list of priorities into a plan the business can actually deliver.',
-            }, { desktop: { fontSize: 19, maxWidth: 520 } }),
+            n('text', { text: p.description }, { desktop: { fontSize: 19, maxWidth: 520 } }),
             n('flex', {}, { desktop: { gap: 12, width: 'auto' }, mobile: { flexDirection: 'column' } }, [
               n('button', { label: 'Book an intro call', size: 'lg', link: pageLink('Contact') }),
               n('button', { label: 'See our services', variant: 'outline', size: 'lg', link: pageLink('Services') }),
@@ -85,7 +105,7 @@ function home() {
             ]),
           ]),
           n('column', {}, {}, [
-            n('image', { src: blobArt({ from: PRIMARY, to: SECONDARY }), alt: 'Abstract brand artwork' }, {
+            n('image', { src: blobArt(artColors(p, PRIMARY, SECONDARY)), alt: 'Abstract brand artwork' }, {
               desktop: { height: 460, borderRadius: 24 },
               mobile: { height: 260 },
             }),
@@ -97,9 +117,9 @@ function home() {
       n('container', {}, { desktop: { gap: 44 } }, [
         n('heading', { text: 'What we help with', level: 'h2' }, { desktop: { fontSize: 38, textAlign: 'center' } }),
         n('grid', { columns: 3 }, {}, [
-          card('Compass', 'Strategy reviews', 'A structured look at where the business makes money, where it leaks, and what to do next quarter.'),
-          card('Settings', 'Operating models', 'Roles, rhythms and reporting that let a growing team run without the founder in every decision.'),
-          card('TrendingUp', 'Growth planning', 'Pricing, positioning and pipeline work grounded in your real numbers rather than benchmarks.'),
+          card(OFFERING_ICONS[0], p.offerings[0].title, p.offerings[0].body),
+          card(OFFERING_ICONS[1], p.offerings[1].title, p.offerings[1].body),
+          card(OFFERING_ICONS[2], p.offerings[2].title, p.offerings[2].body),
         ]),
       ]),
     ]),
@@ -132,23 +152,18 @@ function home() {
         n('button', { label: 'Book an intro call', variant: 'secondary', size: 'lg', link: pageLink('Contact') }),
       ]),
     ]),
-    footer({
-      brand: BRAND,
-      tagline: 'Strategy and operations consultancy for companies in their next chapter.',
-      email: 'hello@northgatepartners.com',
-      phone: '+44 20 7946 0122',
-      address: '18 Cornhill<br>London EC3V 3ND',
-    }),
+    footerNode(p),
   ];
 }
 
-function services() {
+function services(p: BrandProfile) {
+  const art = artColors(p, PRIMARY, SECONDARY);
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Book a call', ctaPage: 'Contact' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Book a call', ctaPage: 'Contact' }),
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 40, backgroundColor: '#f4f2ff' } }, [
       n('container', {}, { desktop: { gap: 16, maxWidth: 780 } }, [
         n('heading', { text: 'Services', level: 'h1' }, { desktop: { fontSize: 52 }, mobile: { fontSize: 34 } }),
-        n('text', { text: 'Three ways we work with leadership teams. Every engagement is scoped and priced before it begins.' }, {
+        n('text', { text: `How ${p.businessName} works with clients. Every engagement is scoped and priced before it begins.` }, {
           desktop: { fontSize: 19 },
         }),
       ]),
@@ -156,9 +171,9 @@ function services() {
     n('services', {}, { desktop: { backgroundColor: '#ffffff', paddingTop: 72 } }, [
       n('container', {}, { desktop: { gap: 44 } }, [
         n('grid', { columns: 3 }, {}, [
-          serviceCard('Strategy review', 'A six-week diagnostic covering revenue, cost, capacity and competitive position, ending in a plan with owners and dates.', PRIMARY, SECONDARY),
-          serviceCard('Operating model design', 'Rebuild how the company runs: decision rights, meeting rhythm, reporting and the handful of metrics that matter.', '#2f7df6', '#59a6ff'),
-          serviceCard('Growth sprint', 'Focused work on pricing, packaging and pipeline, tested against your own data before anything is rolled out.', '#12a17a', '#4fd3a8'),
+          serviceCard(p.offerings[0].title, p.offerings[0].body, art.from, art.to),
+          serviceCard(p.offerings[1].title, p.offerings[1].body, '#2f7df6', '#59a6ff'),
+          serviceCard(p.offerings[2].title, p.offerings[2].body, '#12a17a', '#4fd3a8'),
         ]),
       ]),
     ]),
@@ -173,19 +188,13 @@ function services() {
         { id: itemId(), name: 'Embedded support', price: '4,800', description: 'Per month, minimum three months.', features: 'Two days a month on site\nStanding leadership session\nQuarterly reset\nDirect partner access', ctaLabel: 'Enquire', ctaLink: pageLink('Contact'), featured: false },
       ],
     }),
-    footer({
-      brand: BRAND,
-      tagline: 'Strategy and operations consultancy for companies in their next chapter.',
-      email: 'hello@northgatepartners.com',
-      phone: '+44 20 7946 0122',
-      address: '18 Cornhill<br>London EC3V 3ND',
-    }),
+    footerNode(p),
   ];
 }
 
-function about() {
+function about(p: BrandProfile) {
   return [
-    navbar({ brand: BRAND, ctaLabel: 'Book a call', ctaPage: 'Contact' }),
+    navbar({ brand: p.businessName, ctaLabel: 'Book a call', ctaPage: 'Contact' }),
     n('section', {}, { desktop: { paddingTop: 80, paddingBottom: 72 } }, [
       n('container', {}, {}, [
         n('columns', { count: 2, ratio: '2:1' }, { desktop: { gap: 56, alignItems: 'center' } }, [
@@ -193,11 +202,13 @@ function about() {
             n('heading', { text: 'Small firm. Senior people. Straight answers.', level: 'h1' }, {
               desktop: { fontSize: 46 }, mobile: { fontSize: 31 },
             }),
-            n('text', { text: 'Northgate was founded in 2014 by three operators who had spent their careers inside growing companies rather than advising from outside them. That is still how we staff every engagement: the people you meet are the people who do the work.' }, { desktop: { fontSize: 18 } }),
+            n('text', { text: `${p.businessName} was founded by operators who had spent their careers inside growing companies rather than advising from outside them. That is still how we staff every engagement: the people you meet are the people who do the work.` }, { desktop: { fontSize: 18 } }),
             n('text', { text: 'We take on a small number of clients at a time. It keeps the quality high and means we can say no to work we are not right for.' }, { desktop: { fontSize: 18 } }),
           ]),
           n('column', {}, {}, [
-            n('image', { src: tileArt({ from: PRIMARY, to: SECONDARY }), alt: 'Our studio' }, { desktop: { height: 420, borderRadius: 22 } }),
+            n('image', { src: tileArt(artColors(p, PRIMARY, SECONDARY)), alt: 'Our studio' }, {
+              desktop: { height: 420, borderRadius: 22 },
+            }),
           ]),
         ]),
       ]),
@@ -212,13 +223,7 @@ function about() {
         ]),
       ]),
     ]),
-    footer({
-      brand: BRAND,
-      tagline: 'Strategy and operations consultancy for companies in their next chapter.',
-      email: 'hello@northgatepartners.com',
-      phone: '+44 20 7946 0122',
-      address: '18 Cornhill<br>London EC3V 3ND',
-    }),
+    footerNode(p),
   ];
 }
 
