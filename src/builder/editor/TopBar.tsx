@@ -6,6 +6,8 @@ import {
 import type { DeviceId } from '@/types/project';
 import { Segmented } from '@/components/ui';
 import { useEditorStore } from '@/store/editorStore';
+import { BRAND } from '@/app/brand';
+import { Logo } from '@/app/Logo';
 import { useUiStore } from '@/store/uiStore';
 
 const DEVICE_ICONS: Record<DeviceId, React.ReactNode> = {
@@ -43,10 +45,7 @@ export function TopBar() {
         <ArrowLeft size={16} />
       </button>
 
-      <span className="f-logo">
-        <span className="f-logo-mark">F</span>
-        Flarent
-      </span>
+      <Logo label={BRAND.shortName} />
 
       <div className="f-project-name">
         <input

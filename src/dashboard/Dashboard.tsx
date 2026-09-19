@@ -13,6 +13,7 @@ import {
 import { getTemplate } from '@/templates';
 import type { ProfileInput } from '@/onboarding/profile';
 import { OnboardingFlow } from '@/onboarding/OnboardingFlow';
+import { Logo } from '@/app/Logo';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -61,9 +62,8 @@ export function Dashboard() {
   return (
     <div className="f-dash">
       <header className="f-dash-bar">
-        <Link className="f-logo" to="/" title="Back to the home page">
-          <span className="f-logo-mark">F</span>
-          Flarent Builder
+        <Link to="/" title="Back to the home page">
+          <Logo />
         </Link>
         <span className="f-chip" style={{ marginLeft: 4 }}>
           V1

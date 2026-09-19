@@ -771,3 +771,5 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 .f-onb-progress { margin-right: auto; font-size: 12px; color: var(--f-muted);
   font-variant-numeric: tabular-nums; }
+
+.f-logo-img { display: block; width: auto; object-fit: contain; flex: none; }

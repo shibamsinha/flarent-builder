@@ -3,6 +3,7 @@ import {
   ArrowRight, Blocks, FileDown, MousePointerClick, Palette, Smartphone, Undo2,
 } from 'lucide-react';
 import { TEMPLATES } from '@/templates';
+import { Logo } from '@/app/Logo';
 
 /**
  * The front door. Its only job is to explain what Flarent Builder does and get
@@ -25,10 +26,7 @@ export function Landing() {
 function LandingNav() {
   return (
     <header className="f-land-nav">
-      <span className="f-logo">
-        <span className="f-logo-mark">F</span>
-        Flarent Builder
-      </span>
+      <Logo />
       <nav className="f-land-nav-links">
         <a href="#features">Features</a>
         <a href="#how">How it works</a>
@@ -258,10 +256,7 @@ function ClosingCta() {
 function LandingFooter() {
   return (
     <footer className="f-land-footer">
-      <span className="f-logo">
-        <span className="f-logo-mark">F</span>
-        Flarent Builder
-      </span>
+      <Logo />
       <span className="f-land-footer-note">
         Every behaviour in Flarent Builder is ordinary application logic, with no AI anywhere in it.
       </span>

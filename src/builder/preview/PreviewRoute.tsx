@@ -10,6 +10,7 @@ import { themeToCssVars } from '@/engine/theme';
 import { getProjectRepository } from '@/project/repository';
 import { getAssetService } from '@/services/assets';
 import { useRenderEnv } from '@/builder/editor/useRenderEnv';
+import { Logo } from '@/app/Logo';
 
 /**
  * Preview renders the site through the same renderer the canvas uses, with the
@@ -106,10 +107,7 @@ export function PreviewRoute() {
         <Link className="f-btn f-btn-ghost f-btn-icon" to={`/edit/${project.id}`} title="Back to editor">
           <ArrowLeft size={16} />
         </Link>
-        <span className="f-logo">
-          <span className="f-logo-mark">F</span>
-          {project.name}
-        </span>
+        <Logo label={project.name} />
 
         <nav style={{ display: 'flex', gap: 2, marginLeft: 12, overflowX: 'auto' }}>
           {project.pages.map((item) => (
