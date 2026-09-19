@@ -199,10 +199,14 @@ green business does not end up with an indigo hero image.
 
 ### Interface
 
-The application chrome is Neo-Brutalist: hard black borders, offset shadows
-with no blur, flat fills, square corners and heavy uppercase labels. There are
-no gradients in the UI. Depth comes from displacement rather than softness, so
-every interactive surface moves when you touch it.
+The application reads as a design workbench: neutral surfaces, hairline rules,
+small radii and restrained shadows. Colour carries information rather than
+decoration, so the accent appears only on selection, focus and the primary
+action, and the canvas stays the brightest thing on screen. There are no
+gradients in the UI.
+
+Headings are written as ordinary sentences. There are no eyebrow labels above
+them and no clipped three-word taglines.
 
 That styling applies to the builder itself, never to the websites you make with
 it. Your site renders with its own theme tokens and is unaffected.

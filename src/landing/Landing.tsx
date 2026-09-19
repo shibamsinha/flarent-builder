@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Blocks, FileDown, Layers, Monitor, MousePointerClick, Palette, Smartphone,
-  Sparkles, Tablet, Undo2,
+  ArrowRight, Blocks, FileDown, MousePointerClick, Palette, Smartphone, Undo2,
 } from 'lucide-react';
 import { TEMPLATES } from '@/templates';
 
@@ -14,7 +13,6 @@ export function Landing() {
     <div className="f-land">
       <LandingNav />
       <Hero />
-      <Marquee />
       <Features />
       <Steps />
       <Templates />
@@ -38,7 +36,6 @@ function LandingNav() {
       </nav>
       <Link className="f-btn f-btn-primary" to="/dashboard">
         Open the builder
-        <ArrowRight size={15} />
       </Link>
     </header>
   );
@@ -48,35 +45,24 @@ function Hero() {
   return (
     <section className="f-land-hero">
       <div className="f-land-hero-copy">
-        <span className="f-land-tag">
-          <Sparkles size={13} />
-          V1, no AI required
-        </span>
-        <h1>
-          Build a website.
-          <br />
-          <span className="f-land-mark">No code.</span>
-          <br />
-          No nonsense.
-        </h1>
+        <h1>Design and publish a website without writing code</h1>
         <p>
-          Drag sections onto a canvas, type straight onto the page, and publish a real static
-          website. Everything you place is a proper component, not a screenshot.
+          Drag sections onto a canvas, edit the text straight on the page, and export a real
+          static website you can host anywhere. Everything you place is a proper component with
+          its own settings.
         </p>
         <div className="f-land-cta-row">
           <Link className="f-btn f-btn-primary f-land-btn-lg" to="/dashboard">
-            Start building
-            <ArrowRight size={17} />
+            Open the builder
+            <ArrowRight size={16} />
           </Link>
           <a className="f-btn f-btn-secondary f-land-btn-lg" href="#templates">
-            See the templates
+            Browse the templates
           </a>
         </div>
-        <ul className="f-land-points">
-          <li>Five ready-made templates</li>
-          <li>Desktop, tablet and mobile</li>
-          <li>Export as plain HTML and CSS</li>
-        </ul>
+        <p className="f-land-fineprint">
+          Nothing to install. Your work is saved in this browser as you go.
+        </p>
       </div>
 
       <div className="f-land-hero-art" aria-hidden>
@@ -94,7 +80,7 @@ function MockEditor() {
         <span className="f-land-mock-dot" />
         <span className="f-land-mock-dot" />
         <span className="f-land-mock-dot" />
-        <span className="f-land-mock-title">My Website</span>
+        <span className="f-land-mock-title">Riverside Dental</span>
         <span className="f-land-mock-pill">Saved</span>
       </div>
       <div className="f-land-mock-body">
@@ -116,22 +102,12 @@ function MockEditor() {
             <span />
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function Marquee() {
-  const items = [
-    'Drag and drop', 'Inline editing', 'Undo and redo', 'Responsive breakpoints',
-    'Theme tokens', 'Multi page', 'Static export', 'Contact forms',
-  ];
-  return (
-    <div className="f-land-marquee">
-      <div className="f-land-marquee-track">
-        {[...items, ...items].map((item, index) => (
-          <span key={`${item}-${index}`}>{item}</span>
-        ))}
+        <div className="f-land-mock-insp">
+          <span className="f-land-mock-field" />
+          <span className="f-land-mock-field" />
+          <span className="f-land-mock-field short" />
+          <span className="f-land-mock-field" />
+        </div>
       </div>
     </div>
   );
@@ -140,39 +116,33 @@ function Marquee() {
 const FEATURES = [
   {
     icon: MousePointerClick,
-    title: 'Drag it where you want it',
-    body: 'Pick a component, drop it on the page. Insertion lines show exactly where it lands, and an invalid drop simply will not happen.',
-    color: 'var(--f-yellow)',
+    title: 'Precise drag and drop',
+    body: 'Insertion lines show exactly where a component will land before you let go, and a drop that would break the layout is refused rather than accepted quietly.',
   },
   {
     icon: Blocks,
-    title: '29 real components',
-    body: 'Sections, grids, pricing tables, FAQs, galleries, maps, contact forms and a WhatsApp button. All styled and ready the moment you drop them.',
-    color: 'var(--f-cyan)',
+    title: '29 components that arrive finished',
+    body: 'Sections, grids, pricing tables, galleries, maps, contact forms and a WhatsApp button, each styled and configured the moment you drop it in.',
   },
   {
     icon: Smartphone,
-    title: 'Responsive without the guesswork',
-    body: 'Switch to tablet or mobile and change only what needs changing. Everything else is inherited, so you are never maintaining three copies.',
-    color: 'var(--f-lime)',
+    title: 'Breakpoints that inherit',
+    body: 'Switch to tablet or mobile and change only what needs changing. Everything else is inherited, so you are never maintaining three copies of the same page.',
   },
   {
     icon: Palette,
-    title: 'One theme, whole site',
-    body: 'Colours, fonts and corner radius live in one place. Change the primary colour and every component using it updates at once.',
-    color: 'var(--f-brand-soft)',
+    title: 'Theme tokens across the whole site',
+    body: 'Colours, fonts and corner radius live in one panel. Change the primary colour and every component that references it updates at the same time.',
   },
   {
     icon: Undo2,
-    title: 'Undo that behaves',
-    body: 'Every action is a step you can take back. Dragging a slider counts as one change, not ninety.',
-    color: 'var(--f-yellow)',
+    title: 'History you can rely on',
+    body: 'Every action is a step you can take back. Dragging a slider is recorded as one change rather than ninety separate ones.',
   },
   {
     icon: FileDown,
-    title: 'Export a real website',
-    body: 'Plain HTML and CSS with a sitemap and robots.txt. No editor code ships with it. Upload it anywhere.',
-    color: 'var(--f-cyan)',
+    title: 'Export that stands on its own',
+    body: 'Plain HTML and CSS with a sitemap and robots.txt. No editor code ships with the site, so it runs anywhere you can put a folder of files.',
   },
 ];
 
@@ -180,15 +150,14 @@ function Features() {
   return (
     <section className="f-land-section" id="features">
       <SectionHead
-        kicker="What you get"
-        title="A builder that behaves like a tool"
-        lead="Nothing here is a placeholder. Every feature listed does the thing it says."
+        title="Built to behave like a real tool"
+        lead="Nothing on this page is a placeholder. Every feature listed does the thing it says it does."
       />
       <div className="f-land-grid">
-        {FEATURES.map(({ icon: Icon, title, body, color }) => (
+        {FEATURES.map(({ icon: Icon, title, body }) => (
           <article key={title} className="f-land-card">
-            <span className="f-land-card-icon" style={{ background: color }}>
-              <Icon size={20} />
+            <span className="f-land-card-icon">
+              <Icon size={17} />
             </span>
             <h3>{title}</h3>
             <p>{body}</p>
@@ -200,29 +169,46 @@ function Features() {
 }
 
 const STEPS = [
-  { n: '01', title: 'Pick a template', body: 'Start from one of five finished sites, or from a blank page if you would rather build it yourself.' },
-  { n: '02', title: 'Make it yours', body: 'Double click any text to edit it in place. Swap images, change colours, drag sections into a different order.' },
-  { n: '03', title: 'Check every screen', body: 'Flip between desktop, tablet and mobile. Adjust a breakpoint and only that breakpoint changes.' },
-  { n: '04', title: 'Publish it', body: 'Build the site and download it as plain HTML and CSS, ready to upload to any host.' },
+  {
+    n: '1',
+    title: 'Choose a layout and tell us about your business',
+    body: 'Pick the template closest to what you need, then answer a few questions. Your name, wording and contact details go into the site before it opens.',
+  },
+  {
+    n: '2',
+    title: 'Edit it on the page',
+    body: 'Double click any text to change it in place. Swap images, adjust spacing and colours, and drag sections into a different order.',
+  },
+  {
+    n: '3',
+    title: 'Check how it looks on every screen',
+    body: 'Move between desktop, tablet and mobile. Adjust one breakpoint and the others keep inheriting from the base.',
+  },
+  {
+    n: '4',
+    title: 'Publish it',
+    body: 'Build the site and download it as plain HTML and CSS, ready to upload to any host.',
+  },
 ];
 
 function Steps() {
   return (
     <section className="f-land-section f-land-section-alt" id="how">
       <SectionHead
-        kicker="How it works"
-        title="Four steps, no manual"
+        title="From an empty page to a finished site"
         lead="You do not need to know React, CSS or hosting. You need to know what you want to say."
       />
-      <div className="f-land-steps">
+      <ol className="f-land-steps">
         {STEPS.map((step) => (
-          <article key={step.n} className="f-land-step">
+          <li key={step.n} className="f-land-step">
             <span className="f-land-step-n">{step.n}</span>
-            <h3>{step.title}</h3>
-            <p>{step.body}</p>
-          </article>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </div>
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
   );
 }
@@ -232,9 +218,8 @@ function Templates() {
   return (
     <section className="f-land-section" id="templates">
       <SectionHead
-        kicker="Templates"
-        title="Five sites, already finished"
-        lead="Each one is built from the same components you drag onto the canvas, so everything in them can be changed."
+        title="Five finished sites to start from"
+        lead="Each one is assembled from the same components you drag onto the canvas, so every part of it can be changed."
       />
       <div className="f-land-templates">
         {shown.map((template) => (
@@ -243,18 +228,12 @@ function Templates() {
               <span style={{ background: template.accent[1] }} />
             </span>
             <div className="f-land-tpl-body">
-              <span className="f-land-tpl-tag">{template.tag}</span>
               <h3>{template.name}</h3>
               <p>{template.description}</p>
+              <span className="f-land-tpl-tag">{template.tag}</span>
             </div>
           </article>
         ))}
-      </div>
-      <div className="f-land-devices">
-        <Monitor size={17} /> Desktop
-        <Tablet size={17} /> Tablet
-        <Smartphone size={17} /> Mobile
-        <Layers size={17} /> Multi page
       </div>
     </section>
   );
@@ -263,11 +242,14 @@ function Templates() {
 function ClosingCta() {
   return (
     <section className="f-land-closing">
-      <h2>Your website is about twenty minutes away.</h2>
-      <p>Open the builder, pick a template and start typing. Nothing to install, nothing to sign up for.</p>
-      <Link className="f-btn f-land-btn-lg f-land-btn-invert" to="/dashboard">
+      <h2>Start building</h2>
+      <p>
+        Open the builder, choose a template and answer a few questions about your business. The
+        first version of your site will be on screen in a couple of minutes.
+      </p>
+      <Link className="f-btn f-btn-primary f-land-btn-lg" to="/dashboard">
         Open the builder
-        <ArrowRight size={17} />
+        <ArrowRight size={16} />
       </Link>
     </section>
   );
@@ -281,7 +263,7 @@ function LandingFooter() {
         Flarent Builder
       </span>
       <span className="f-land-footer-note">
-        Built without AI. Every behaviour is ordinary application logic.
+        Every behaviour in Flarent Builder is ordinary application logic, with no AI anywhere in it.
       </span>
       <Link className="f-btn f-btn-secondary f-btn-sm" to="/dashboard">
         Open the builder
@@ -290,10 +272,9 @@ function LandingFooter() {
   );
 }
 
-function SectionHead({ kicker, title, lead }: { kicker: string; title: string; lead: string }) {
+function SectionHead({ title, lead }: { title: string; lead: string }) {
   return (
     <div className="f-land-head">
-      <span className="f-land-kicker">{kicker}</span>
       <h2>{title}</h2>
       <p>{lead}</p>
     </div>

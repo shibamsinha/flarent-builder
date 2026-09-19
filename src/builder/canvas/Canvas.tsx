@@ -188,8 +188,8 @@ function EmptyPage() {
       </div>
       <h3>This page is empty</h3>
       <p>
-        Drag a section from the left panel onto the canvas to get started. Try Hero, Features or
-        Navbar.
+        Drag a section from the left panel onto the canvas to get started. Hero, Features and
+        Navbar are good places to begin.
       </p>
     </div>
   );

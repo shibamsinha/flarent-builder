@@ -74,7 +74,7 @@ export function Dashboard() {
         <div className="f-dash-hero">
           <div>
             <h1>My websites</h1>
-            <p>Build, edit and publish professional websites. No code required.</p>
+            <p>Everything you have built here, ready to keep editing or publish.</p>
           </div>
           <button className="f-btn f-btn-primary" onClick={() => setPicking(true)}>
             <Plus size={16} />
@@ -252,9 +252,9 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
         <Layers size={24} />
       </div>
       <strong>No websites yet</strong>
-      <p style={{ maxWidth: 340, lineHeight: 1.6 }}>
-        Start from one of five ready-made templates, or from a blank page. You can change everything
-        later.
+      <p style={{ maxWidth: 360, lineHeight: 1.6 }}>
+        Start from one of five ready-made templates, or from a blank page. Whichever you choose,
+        every part of it can be changed afterwards.
       </p>
       <button className="f-btn f-btn-primary" onClick={onCreate} style={{ marginTop: 6 }}>
         <Plus size={16} />
